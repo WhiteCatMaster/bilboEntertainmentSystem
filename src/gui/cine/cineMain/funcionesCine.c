@@ -89,8 +89,7 @@ int comprarEntradas()
         strcpy(entradas[1], "Indiana Jones");
         strcpy(entradas[2], "Rick Deckard");
         strcpy(entradas[3], "Jack Ryan");
-        strcpy(entradas[4], "game of thrones");
-        strcpy(entradas[4], "garfield");
+        
         printf("Elige una pelicula\n");
         printf("===================================\n");
         for (int i = 0; i < 100 ; i++)
