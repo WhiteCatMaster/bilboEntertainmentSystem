@@ -40,7 +40,7 @@ int main() {
         if(c == '0'){
           	clear_screen();
             comprarEntradas();
-        }
+        }+
         else {
 
             clear_screen();
