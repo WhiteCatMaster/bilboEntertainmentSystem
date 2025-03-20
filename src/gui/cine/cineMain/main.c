@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "funcionesCine.h"
+#include "leerTextoGigante.h"
 
 void ejecutar_programa(const char *comando) {
     // Usamos popen para ejecutar el comando y obtener su salida estándar
@@ -32,6 +33,7 @@ int main() {
     clear_screen();  // Clear the screen
     char c;
     while (c != '0'){
+        leerTcine();
         printf("===================================\n ");
         printf("(0)-- > comprar entradas < --\n ");
         c = getchar();
