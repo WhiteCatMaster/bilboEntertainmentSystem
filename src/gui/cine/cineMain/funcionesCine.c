@@ -81,6 +81,7 @@ int elegirNEntradas(int altura, int anchura) {
 }
 
 void elegirAsientos(int nEntradas, char **matrizAsientos, int altura, int anchura) {
+    clear_screen();
     printf("------------------------------------------------------------------------------------------------------------------------\n");
     printf("                                                              pantalla\n");
     printf("------------------------------------------------------------------------------------------------------------------------\n");
@@ -91,8 +92,8 @@ void elegirAsientos(int nEntradas, char **matrizAsientos, int altura, int anchur
         }
     }
     for (int i = 0; i < altura; i++) {
-        printf("%d  ", i + 1);
-        for (int j = 0; j < anchura; j++) {
+        printf("%d  ", i );
+        for (int j = 1; j < anchura; j++) {
             if (i == 0) {
                 if (j > 9) {
                     printf("%d ", j);

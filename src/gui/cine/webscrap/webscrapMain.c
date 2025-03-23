@@ -2,76 +2,67 @@
 #include <stdlib.h>
 #include <string.h>
 #include "webscrapMain.h"
+#include "../../../BBDD/cineDB.h" // Aquí se asume que insertarPelicula está definida
 
 void pyAlhondiga(void)
 {
     FILE *fp;
     char path[1035];
-    char peliculas[100][100];
+    Pelicula **peliculas = NULL; // Array dinámico de punteros a Pelicula
     int r = 0;
 
-    // Execute the Python command
+    // Ejecutar el comando de Python
     fp = popen("python alhondiga.py --titulos", "r");
     if (fp == NULL) {
         printf("Failed to run command\n");
         return;
     }
 
-    // Read the output of the command and store it in the array
-    while (fgets(path, sizeof(path), fp) != NULL && r < 100) {
-        path[strcspn(path, "\n")] = '\0';  // Remove the newline character
-        snprintf(peliculas[r], sizeof(peliculas[r]), "%s", path);
+    // Leer la salida del comando y crear una nueva película por cada título
+    while (fgets(path, sizeof(path), fp) != NULL) {
+        path[strcspn(path, "\n")] = '\0'; // Eliminar el carácter de nueva línea
+
+        // Redimensionar el array dinámico para agregar una nueva película
+        peliculas = realloc(peliculas, sizeof(Pelicula *) * (r + 1));
+        if (peliculas == NULL) {
+            printf("Error al asignar memoria\n");
+            pclose(fp);
+            return;
+        }
+
+        // Crear una nueva película y asignar el título
+        peliculas[r] = malloc(sizeof(Pelicula));
+        if (peliculas[r] == NULL) {
+            printf("Error al asignar memoria para la película\n");
+            pclose(fp);
+            return;
+        }
+        snprintf(peliculas[r]->titulo, sizeof(peliculas[r]->titulo), "%s", path);
+
+        // Insertar la película en la base de datos
+        if (insertarPelicula(peliculas[r]) != 0) {
+            printf("Error al insertar la película en la base de datos: %s\n", peliculas[r]->titulo);
+        } else {
+            printf("Película insertada en la base de datos: %s\n", peliculas[r]->titulo);
+        }
+
         r++;
     }
 
-    // Close the file pointer
+    // Cerrar el archivo
     pclose(fp);
 
-    // Print the stored strings
+    // Liberar la memoria de cada película
     for (int i = 0; i < r; i++) {
-        printf("Pelicula %d: %s\n", i + 1, peliculas[i]);
-    }
-}
-
-int cargarNombresPeliculas(char *message)
-{
-    FILE *fp;
-    char path[1035];
-    char peliculas[100][100];
-    int r = 0;
-    char command[1050];
-
-    // Format the command string
-    snprintf(command, sizeof(command), "python movies.py %s", message);
-
-    // Execute the command
-    fp = popen(command, "r");
-    if (fp == NULL) {
-        printf("Failed to run command\n");
-        return 1;
+        free(peliculas[i]);
     }
 
-    // Read the output of the command and store it in the array
-    while (fgets(path, sizeof(path), fp) != NULL && r < 100) {
-        path[strcspn(path, "\n")] = '\0';  // Remove the newline character
-        snprintf(peliculas[r], sizeof(peliculas[r]), "%s", path);
-        r++;
-    }
-
-    // Close the file pointer
-    pclose(fp);
-
-    // Print the stored strings
-    for (int i = 0; i < r; i++) {
-        printf("Pelicula %d: %s\n", i + 1, peliculas[i]);
-    }
-
-    return 0;
+    // Liberar el array dinámico
+    free(peliculas);
 }
 
 int main(void)
 {
     pyAlhondiga();
-    // cargarNombresPeliculas("upcoming");
     return 0;
 }
