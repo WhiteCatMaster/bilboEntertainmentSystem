@@ -4,7 +4,7 @@
 int leerTcine(){
     FILE *fichero;
     char c;
-    fichero = fopen("textoGigante.txt", "r");
+    fichero = fopen("src/gui/cine/cineMain/textoGigante.txt", "r");
     if (fichero == NULL) {
         printf("No se ha podido abrir el fichero\n");
         return 1;

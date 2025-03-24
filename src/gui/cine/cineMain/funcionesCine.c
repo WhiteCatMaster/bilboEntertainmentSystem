@@ -153,6 +153,7 @@ int comprarEntradas() {
 
     while(e != '0') {
         pelicula = 1;
+        printf("===================================\n");
         Pelicula *peli= show_pelicula();
         if(peli == NULL){
             printf("No hay peliculas disponibles\n");

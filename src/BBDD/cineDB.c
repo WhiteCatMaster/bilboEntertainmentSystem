@@ -51,6 +51,7 @@ Pelicula* show_pelicula(){
     if (sqlite3_open(CINEBD, &db) != SQLITE_OK) {
         printf("Error al abrir la base de datos: %s\n", sqlite3_errmsg(db));
     }
+    printf("Base de datos abierta\n");
     char *selectP = "SELECT * FROM PELICULA";
     if (sqlite3_prepare_v2(db, selectP, -1, &stmt, NULL) != SQLITE_OK) {
         printf("Error al preparar la declaración SQL: %s\n", sqlite3_errmsg(db));
@@ -59,6 +60,7 @@ Pelicula* show_pelicula(){
     }
     Pelicula *peliculas = (Pelicula *)malloc(100 * sizeof(Pelicula));
     int r = 0;
+    printf("===================================\n");
     while (sqlite3_step(stmt) == SQLITE_ROW) {
 
         strcpy(peliculas[r].titulo, sqlite3_column_text(stmt, 0));
@@ -70,9 +72,10 @@ Pelicula* show_pelicula(){
         strcpy(peliculas[r].genero , sqlite3_column_text(stmt, 6));
         strcpy(peliculas[r].director , sqlite3_column_text(stmt, 7));
         peliculas[r].rating = sqlite3_column_int(stmt, 8);
+        printf("Pelicula: %s\n", peliculas[r].titulo);
         r++;
     }
-
+    printf("fallitos criticos");
     return peliculas;
 
 }
