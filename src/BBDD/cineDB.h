@@ -16,5 +16,6 @@ typedef struct {
 
 int  insert_pelicula(Pelicula *p);
 Pelicula* show_pelicula();
+int borrarbdPelicula();
 
 #endif // CINE_DB_H

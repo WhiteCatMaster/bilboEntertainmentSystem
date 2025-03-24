@@ -132,7 +132,7 @@ void elegirAsientos(int nEntradas, char **matrizAsientos, int altura, int anchur
 
 
 int comprarEntradas() {
-    char e = 'e';
+    char e = 'e'; // Inicializar la variable de control del bucle
     int pelicula;
     int nentradas;
     int altura = 5;
@@ -151,20 +151,26 @@ int comprarEntradas() {
         entradas[i] = (char *)calloc(100, sizeof(char));
     }
 
-    while(e != '0') {
-        pelicula = 1;
-        printf("===================================\n");
-        Pelicula *peli= show_pelicula();
-        if(peli == NULL){
-            printf("No hay peliculas disponibles\n");
+    while (e != '0') {
+        pelicula = 0;
+        //printf("===================================\n");
+        //printf("alli");
+        Pelicula *peli = show_pelicula();
+        //printf("aqui");
+        if (peli == NULL) {
+            printf("No hay películas disponibles\n");
             return 1;
         }
-        printf("===================================\n");
-        for(pelicula = 0; pelicula < 100; peli++){
-            strcpy(entradas[pelicula], peli[pelicula].titulo);
 
+        printf("===================================\n");
+        for (pelicula = 0; pelicula < 10; pelicula++) {
+            if (strlen(peli[pelicula].titulo) == 0) {
+                break; // Detener si no hay más películas
+            }
+            strcpy(entradas[pelicula], peli[pelicula].titulo);
         }
-        printf("Elige una pelicula\n");
+
+        printf("ELIGE UNA PELICULA: \n");
         printf("===================================\n");
         for (int i = 0; i < 100; i++) {
             if (strlen(entradas[i]) == 0) {
@@ -172,26 +178,26 @@ int comprarEntradas() {
             }
             printf("(%d): --> %s <-- \n", i + 1, entradas[i]);
         }
+
+        printf("INTRODUCE EL NUMERO DE LA PELICULA: ");
         if (scanf("%d", &pelicula) != 1 || pelicula < 1 || pelicula > 100) {
             printf("Entrada no válida. Inténtalo de nuevo.\n");
-            while (getchar() != '\n'); // Clear the input buffer
+            while (getchar() != '\n'); // Limpiar el buffer de entrada
             continue;
         }
-        pelicula--; // Adjust for zero-based indexing
-        if (pelicula >= 0 && pelicula < 6) {
+        pelicula--; // Ajustar para índices basados en cero
+
+        if (pelicula >= 0 && pelicula < 100 && strlen(entradas[pelicula]) > 0) {
             nentradas = elegirNEntradas(altura, anchura);
             elegirAsientos(nentradas, matrizAsientos, altura, anchura);
             printf("Ticket de compra\n");
-            printf("Pelicula: %s\n", entradas[pelicula]);
+            printf("Película: %s\n", entradas[pelicula]);
             printf("Asientos: %i \n", nentradas);
-            printf("pulse e para seguir comprando y cualquier otra cosa para salir :\n");
-            char g;
-            scanf(" %c", &g);
-            if (g != 'e') {
-                e = '0';
-            }
+            printf("Pulsa 'e' para seguir comprando o '0' para salir: ");
+            while (getchar() != '\n'); // Limpiar el buffer de entrada
+            scanf(" %c", &e); // Leer la opción del usuario
         } else {
-            printf("No has elegido ninguna pelicula\n");
+            printf("No has elegido ninguna película válida\n");
             clear_screen();
         }
     }

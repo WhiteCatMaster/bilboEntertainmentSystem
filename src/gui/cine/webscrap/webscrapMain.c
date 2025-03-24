@@ -11,6 +11,7 @@ void pyAlhondiga(void)
     char path[1035];
     Pelicula **peliculas = NULL; // Array dinámico de punteros a Pelicula
     int r = 0;
+    borrarbdPelicula(); // Borrar la base de datos de películas
 
     // Ejecutar el comando de Python
     fp = popen("python src/gui/cine/webscrap/alhondiga.py --titulos", "r");

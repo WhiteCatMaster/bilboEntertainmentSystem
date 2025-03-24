@@ -6,6 +6,8 @@
 #include "funcionesCine.h"
 #include "leerTextoGigante.h"
 #include "../../../BBDD/cineDB.h"
+#include "../webscrap/webscrapMain.h"
+
 
 void ejecutar_programa(const char *comando) {
     // Usamos popen para ejecutar el comando y obtener su salida estándar
@@ -28,6 +30,7 @@ void ejecutar_programa(const char *comando) {
 }
 
 int main() {
+    pyAlhondiga();
   	// system("cd ..\\mano");
     // ejecutar_programa("..\\mano\\controlxdDedos.exe");
 
