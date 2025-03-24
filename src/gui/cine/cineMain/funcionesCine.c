@@ -3,6 +3,7 @@
 #include <string.h>
 #include "funcionesCine.h"
 #include "../../../BBDD/cineDB.h"
+#include "../webscrap/webscrapMain.h"
 
 
 void clear_screen() {
@@ -161,9 +162,9 @@ int comprarEntradas() {
             printf("No hay películas disponibles\n");
             return 1;
         }
-
+        
         printf("===================================\n");
-        for (pelicula = 0; pelicula < 10; pelicula++) {
+        for (pelicula = 0; pelicula < csave; pelicula++) {
             if (strlen(peli[pelicula].titulo) == 0) {
                 break; // Detener si no hay más películas
             }
