@@ -14,7 +14,7 @@ typedef struct {
     int id;
 } Pelicula;
 
-void insert_pelicula(Pelicula *p);
-
+int  insert_pelicula(Pelicula *p);
+Pelicula* show_pelicula();
 
 #endif // CINE_DB_H

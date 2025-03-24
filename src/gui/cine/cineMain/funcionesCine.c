@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include "funcionesCine.h"
+#include "../../../BBDD/cineDB.h"
+
 
 void clear_screen() {
 #ifdef _WIN32
@@ -151,12 +153,16 @@ int comprarEntradas() {
 
     while(e != '0') {
         pelicula = 1;
-        strcpy(entradas[0], "Han Solo");
-        strcpy(entradas[1], "Indiana Jones");
-        strcpy(entradas[2], "Rick Deckard");
-        strcpy(entradas[3], "Jack Ryan");
-        strcpy(entradas[4], "game of thrones");
-        strcpy(entradas[5], "garfield");
+        Pelicula *peli= show_pelicula();
+        if(peli == NULL){
+            printf("No hay peliculas disponibles\n");
+            return 1;
+        }
+        printf("===================================\n");
+        for(pelicula = 0; pelicula < 100; peli++){
+            strcpy(entradas[pelicula], peli[pelicula].titulo);
+
+        }
         printf("Elige una pelicula\n");
         printf("===================================\n");
         for (int i = 0; i < 100; i++) {

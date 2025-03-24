@@ -6,20 +6,22 @@
 
 void pyAlhondiga(void)
 {
+    printf("Ejecutando el script de Python...\n");
     FILE *fp;
     char path[1035];
     Pelicula **peliculas = NULL; // Array dinámico de punteros a Pelicula
     int r = 0;
 
     // Ejecutar el comando de Python
-    fp = popen("python alhondiga.py --titulos", "r");
+    fp = popen("python src/gui/cine/webscrap/alhondiga.py --titulos", "r");
     if (fp == NULL) {
         printf("Failed to run command\n");
         return;
     }
-
+    printf("Comando ejecutado\n");
     // Leer la salida del comando y crear una nueva película por cada título
     while (fgets(path, sizeof(path), fp) != NULL) {
+        printf("Leyendo linea: %s", path);
         path[strcspn(path, "\n")] = '\0'; // Eliminar el carácter de nueva línea
 
         // Redimensionar el array dinámico para agregar una nueva película
@@ -29,7 +31,7 @@ void pyAlhondiga(void)
             pclose(fp);
             return;
         }
-
+        printf("Memoria asignada\n");
         // Crear una nueva película y asignar el título
         peliculas[r] = malloc(sizeof(Pelicula));
         if (peliculas[r] == NULL) {
@@ -37,15 +39,34 @@ void pyAlhondiga(void)
             pclose(fp);
             return;
         }
-        snprintf(peliculas[r]->titulo, sizeof(peliculas[r]->titulo), "%s", path);
+
+        // Allocate memory for the title
+        peliculas[r]->titulo = malloc(strlen(path) + 1);
+        if (peliculas[r]->titulo == NULL) {
+            printf("Error al asignar memoria para el título\n");
+            free(peliculas[r]);
+            pclose(fp);
+            return;
+        }
+        strcpy(peliculas[r]->titulo, path);
+        peliculas[r]->hora = 0.0;
+        peliculas[r]->descripcion = "No disponible";
+        peliculas[r]->cine = "Alhóndiga";
+        peliculas[r]->salida = 0;
+        peliculas[r]->precio = 0.0;
+        peliculas[r]->genero = "No disponible";
+        peliculas[r]->director = "No disponible";
+        peliculas[r]->rating = 0;
+        peliculas[r]->id = 0;
+        printf("Pelicula creada\n");
 
         // Insertar la película en la base de datos
-        if (insertarPelicula(peliculas[r]) != 0) {
+        if (insert_pelicula(peliculas[r]) != 0) {
             printf("Error al insertar la película en la base de datos: %s\n", peliculas[r]->titulo);
         } else {
             printf("Película insertada en la base de datos: %s\n", peliculas[r]->titulo);
         }
-
+        printf("Pelicula insertada\n");
         r++;
     }
 
@@ -60,9 +81,10 @@ void pyAlhondiga(void)
     // Liberar el array dinámico
     free(peliculas);
 }
-
+/*
 int main(void)
 {
     pyAlhondiga();
     return 0;
 }
+    */
