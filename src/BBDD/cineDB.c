@@ -130,7 +130,27 @@ Pelicula* show_pelicula() {
 
     return peliculas;
 }
+// enseñar peliculas por cine
+Pelicula* peliculas_by_cine(Pelicula *p, char *cine){
+    Pelicula *peliculas = (Pelicula *)malloc(100 * sizeof(Pelicula));
+    if (peliculas == NULL) {
+        printf("Error al asignar memoria para las películas\n");
+        return NULL;
+    }
+    int r = 0;
+    for (int i = 0; i < 100; i++) {
+        if (strlen(p[i].titulo) == 0) {
+            break;
+        }
+        if (strcmp(p[i].cine, cine) == 0) {
+            peliculas[r] = p[i];
+            r++;
+        }
+    }
+    return peliculas;
+}
 
+// borrar base de datos de pelicula
 int borrarbdPelicula(){
     sqlite3 *db;
     sqlite3_stmt *stmt;
@@ -155,3 +175,79 @@ int borrarbdPelicula(){
         return 0;
     }
 }
+
+//insertar critica
+int insert_critica(Critica *c){
+    sqlite3 *db;
+    sqlite3_stmt *stmt;
+    if (sqlite3_open(CINEBD, &db) != SQLITE_OK) {
+        printf("Error al abrir la base de datos: %s\n", sqlite3_errmsg(db));
+        return 1;
+    }
+
+    char *insertC = "INSERT INTO CRITICA(PELICULA, USUARIO, NOTA, RESENA) VALUES (?, ?, ?, ?)";
+    if (sqlite3_prepare_v2(db, insertC, -1, &stmt, NULL) != SQLITE_OK) {
+        printf("Error al preparar la declaración SQL: %s\n", sqlite3_errmsg(db));
+        sqlite3_close(db);
+        return 1;
+    }
+    sqlite3_bind_text(stmt, 1, c->pelicula, strlen(c->pelicula), SQLITE_STATIC);
+    sqlite3_bind_text(stmt, 2, c->usuario, strlen(c->usuario), SQLITE_STATIC);
+    sqlite3_bind_int(stmt, 3, c->nota);
+    sqlite3_bind_text(stmt, 4, c->reseña, strlen(c->reseña), SQLITE_STATIC);
+    
+
+    int result = sqlite3_step(stmt);
+    if (result != SQLITE_DONE) {
+        printf("Error al insertar la crítica\n");
+        return 1;
+    } else {
+        printf("Crítica insertada correctamente\n");
+        return 0;
+    }
+}
+// critica por pelicula
+Critica* critica_by_pelicula(Critica *c, char *pelicula){
+    Critica *criticas = (Critica *)malloc(100 * sizeof(Critica));
+    if (criticas == NULL) {
+        printf("Error al asignar memoria para las críticas\n");
+        return NULL;
+    }
+    int r = 0;                                  
+    for (int i = 0; i < 100; i++) {
+        if (strlen(c[i].pelicula) == 0) {
+            break;
+        }
+        if (strcmp(c[i].pelicula, pelicula) == 0) {
+            criticas[r] = c[i];
+            r++;
+        }
+    }
+    return criticas;
+}
+// borrar base de datos de critica
+int borrarbdCritica(){
+    sqlite3 *db;
+    sqlite3_stmt *stmt;
+    if (sqlite3_open(CINEBD, &db) != SQLITE_OK) {
+        printf("Error al abrir la base de datos: %s\n", sqlite3_errmsg(db));
+        return 1;
+    }
+
+    char *deleteC = "DELETE FROM CRITICA";
+    if (sqlite3_prepare_v2(db, deleteC, -1, &stmt, NULL) != SQLITE_OK) {
+        printf("Error al preparar la declaración SQL: %s\n", sqlite3_errmsg(db));
+        sqlite3_close(db);
+        return 1;
+    }
+
+    int result = sqlite3_step(stmt);
+    if (result != SQLITE_DONE) {
+        printf("Error al borrar la tabla\n");
+        return 1;
+    } else {
+        printf("Tabla borrada correctamente\n");
+        return 0;
+    }
+}
+
