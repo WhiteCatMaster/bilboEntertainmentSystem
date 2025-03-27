@@ -194,7 +194,7 @@ int insert_critica(Critica *c){
     sqlite3_bind_text(stmt, 1, c->pelicula, strlen(c->pelicula), SQLITE_STATIC);
     sqlite3_bind_text(stmt, 2, c->usuario, strlen(c->usuario), SQLITE_STATIC);
     sqlite3_bind_int(stmt, 3, c->nota);
-    sqlite3_bind_text(stmt, 4, c->reseña, strlen(c->reseña), SQLITE_STATIC);
+    sqlite3_bind_text(stmt, 4, c->resena, strlen(c->resena), SQLITE_STATIC);
     
 
     int result = sqlite3_step(stmt);
@@ -204,6 +204,61 @@ int insert_critica(Critica *c){
     } else {
         printf("Crítica insertada correctamente\n");
         return 0;
+    }
+}
+// enseñar criticas
+Critica* show_critica(){
+    sqlite3 *db;
+    sqlite3_stmt *stmt;
+    if (sqlite3_open(CINEBD, &db) != SQLITE_OK) {
+        printf("Error al abrir la base de datos: %s\n", sqlite3_errmsg(db));
+        return NULL;
+    }
+    // printf("Base de datos abierta\n");
+
+    char *selectC = "SELECT * FROM CRITICA";
+    if (sqlite3_prepare_v2(db, selectC, -1, &stmt, NULL) != SQLITE_OK) {
+        printf("Error al preparar la declaración SQL: %s\n", sqlite3_errmsg(db));
+        sqlite3_close(db);
+        return NULL;
+    }
+
+    Critica *criticas = (Critica *)malloc(100 * sizeof(Critica));
+    if (criticas == NULL) {
+        printf("Error al asignar memoria para las críticas\n");
+        sqlite3_finalize(stmt);
+        sqlite3_close(db);
+        return NULL;
+    }
+
+    int r = 0;
+    printf("===================================\n");
+    while (sqlite3_step(stmt) == SQLITE_ROW) {
+        // Asignar memoria dinámica para cada campo
+        const unsigned char *pelicula = sqlite3_column_text(stmt, 0);
+        criticas[r].pelicula = malloc(strlen((const char *)pelicula) + 1);
+        if (criticas[r].pelicula == NULL) {
+            printf("Error al asignar memoria para la película\n");
+            break;
+        }
+        strcpy(criticas[r].pelicula, (const char *)pelicula);
+
+        const unsigned char *usuario = sqlite3_column_text(stmt, 1);
+        criticas[r].usuario = malloc(strlen((const char *)usuario) + 1);
+        if (criticas[r].usuario == NULL) {
+            printf("Error al asignar memoria para el usuario\n");
+            break;
+        }
+        strcpy(criticas[r].usuario, (const char *)usuario);
+
+        criticas[r].nota = sqlite3_column_int(stmt, 2);
+
+        const unsigned char *resena = sqlite3_column_text(stmt, 3);
+        criticas[r].resena = malloc(strlen((const char *)resena) + 1);
+        if (criticas[r].resena == NULL) {
+            printf("Error al asignar memoria para la reseña\n");
+            break;
+        }
     }
 }
 // critica por pelicula

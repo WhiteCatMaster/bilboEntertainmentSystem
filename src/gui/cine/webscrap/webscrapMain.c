@@ -22,7 +22,7 @@ void pyAlhondiga(void)
     printf("Comando ejecutado\n");
     // Leer la salida del comando y crear una nueva película por cada título
     while (fgets(path, sizeof(path), fp) != NULL) {
-        printf("Leyendo linea: %s", path);
+        // printf("Leyendo linea: %s", path);
         path[strcspn(path, "\n")] = '\0'; // Eliminar el carácter de nueva línea
 
         // Redimensionar el array dinámico para agregar una nueva película
@@ -32,7 +32,7 @@ void pyAlhondiga(void)
             pclose(fp);
             return;
         }
-        printf("Memoria asignada\n");
+        // printf("Memoria asignada\n");
         // Crear una nueva película y asignar el título
         peliculas[r] = malloc(sizeof(Pelicula));
         if (peliculas[r] == NULL) {
@@ -66,9 +66,9 @@ void pyAlhondiga(void)
         if (insert_pelicula(peliculas[r]) != 0) {
             printf("Error al insertar la película en la base de datos: %s\n", peliculas[r]->titulo);
         } else {
-            printf("Película insertada en la base de datos: %s\n", peliculas[r]->titulo);
+            // printf("Película insertada en la base de datos: %s\n", peliculas[r]->titulo);
         }
-        printf("Pelicula insertada\n");
+        // printf("Pelicula insertada\n");
         r++;
     }
 

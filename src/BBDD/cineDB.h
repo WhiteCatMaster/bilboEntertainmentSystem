@@ -18,15 +18,15 @@ typedef struct {
     char *pelicula;
     char *usuario;
     int nota;
-    char* reseña;
+    char* resena;
 } Critica;
 
 int  insert_pelicula(Pelicula *p);
-Pelicula* show_pelicula();
+Pelicula* show_pelicula(void);
 Pelicula* peliculas_by_cine(Pelicula *p, char *cine);
 int borrarbdPelicula();
 int insert_critica(Critica *c);
-Critica* show_critica();
+Critica* show_critica(void);
 Critica* critica_by_pelicula(Critica *c, char *pelicula);
 Critica* critica_by_usuario(Critica *c, char *usuario);
 int borrarbdCritica();
