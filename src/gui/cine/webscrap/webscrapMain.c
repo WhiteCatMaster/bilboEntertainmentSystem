@@ -3,7 +3,7 @@
 #include <string.h>
 #include "webscrapMain.h"
 #include "../../../BBDD/cineDB.h" // Aquí se asume que insertarPelicula está definida
-int csave;
+int ccsave;
 void pyAlhondiga(void)
 {
     printf("Ejecutando el script de Python...\n");
@@ -60,7 +60,7 @@ void pyAlhondiga(void)
         peliculas[r]->rating = 0;
         peliculas[r]->id = 0;
         printf("Pelicula creada\n");
-        csave +=1;
+        ccsave +=1;
 
         // Insertar la película en la base de datos
         if (insert_pelicula(peliculas[r]) != 0) {
