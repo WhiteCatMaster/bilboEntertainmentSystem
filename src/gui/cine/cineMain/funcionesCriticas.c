@@ -1,6 +1,7 @@
 #include "funcionesCine.h"
 #include "../../../BBDD/cineDB.h"
 #include "funcionesCriticas.h"
+#include "../webscrap/webscrapMain.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -9,14 +10,14 @@ void ensenar_criticas() {
     int e = 0;
     while (e == 0) {
         Pelicula *pelicula = show_pelicula();
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < ccsave; i++) {
             if (strlen(pelicula[i].titulo) == 0) {
                 break;
             }
             printf("Peli: %s\n", pelicula[i].titulo);
         }
 
-        char peliculaElegida[100];
+        char peliculaElegida[10];
         printf("Escribe el nombre de la pelicula de la que quieres ver las criticas: ");
         while (getchar() != '\n'); // Limpiar el buffer de entrada
         fgets(peliculaElegida, sizeof(peliculaElegida), stdin);
@@ -24,7 +25,7 @@ void ensenar_criticas() {
 
         Critica *critica = show_critica();
         Critica *criticas = critica_by_pelicula(critica, peliculaElegida);
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < 10; i++) {
             if (strlen(criticas[i].pelicula) == 0) {
                 break;
             }
