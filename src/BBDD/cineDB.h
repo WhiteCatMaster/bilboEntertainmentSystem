@@ -21,6 +21,13 @@ typedef struct {
     char* resena;
 } Critica;
 
+typedef struct {
+    char *nombre;
+    char *descripcion;
+    float precioCo;
+    float precioAl;
+} Libro;
+
 int  insert_pelicula(Pelicula *p);
 Pelicula* show_pelicula(void);
 Pelicula* peliculas_by_cine(Pelicula *p, char *cine);

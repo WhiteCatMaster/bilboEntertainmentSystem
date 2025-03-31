@@ -22,9 +22,12 @@ void ensenar_criticas() {
         while (getchar() != '\n'); // Limpiar el buffer de entrada
         fgets(peliculaElegida, sizeof(peliculaElegida), stdin);
         peliculaElegida[strcspn(peliculaElegida, "\n")] = '\0'; // Eliminar el carácter de nueva línea
-
         Critica *critica = show_critica();
         Critica *criticas = critica_by_pelicula(critica, peliculaElegida);
+        if (criticas == NULL) {
+            printf("No hay criticas para esta pelicula\n");
+            return;
+        }
         for (int i = 0; i < 10; i++) {
             if (strlen(criticas[i].pelicula) == 0) {
                 break;
