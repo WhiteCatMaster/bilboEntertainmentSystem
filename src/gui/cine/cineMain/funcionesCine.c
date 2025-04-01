@@ -164,7 +164,7 @@ int comprarEntradas() {
         }
         
         printf("===================================\n");
-        for (pelicula = 0; pelicula < csave; pelicula++) {
+        for (pelicula = 0; pelicula < ccsave; pelicula++) {
             if (strlen(peli[pelicula].titulo) == 0) {
                 break; // Detener si no hay más películas
             }

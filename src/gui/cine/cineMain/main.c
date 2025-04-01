@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "funcionesCine.h"
+#include "funcionesCriticas.h"
 #include "leerTextoGigante.h"
 #include "../../../BBDD/cineDB.h"
 #include "../webscrap/webscrapMain.h"
@@ -37,15 +38,18 @@ int main() {
     clear_screen();  // Clear the screen
     char c;
     while (c != '0'){
-        leerTcine();
+        //leerTcine();
         printf("===================================\n ");
         printf("(0)-- > comprar entradas < --\n ");
+        printf("(1)-- > añadir critica < --\n ");
         c = getchar();
         if(c == '0'){
           	clear_screen();
             comprarEntradas();
-        }
-        else {
+        }else if (c == '1'){
+            clear_screen();
+            ensenar_criticas();
+        }else {
 
             clear_screen();
         }
