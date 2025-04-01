@@ -26,6 +26,7 @@ typedef struct {
     char *descripcion;
     float precioCo;
     float precioAl;
+    char *genero;
 } Libro;
 
 int  insert_pelicula(Pelicula *p);
@@ -37,5 +38,8 @@ Critica* show_critica(void);
 Critica* critica_by_pelicula(Critica *c, char *pelicula);
 Critica* critica_by_usuario(Critica *c, char *usuario);
 int borrarbdCritica();
+int insert_libro(Libro *l);
+int show_libro(void);
+int delete_libro(Libro *l);
 
 #endif // CINE_DB_H
