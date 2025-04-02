@@ -7,6 +7,7 @@
 
 typedef struct {
     char nombre[50];
+    char genero[50];
     char descripcion[100];
     float precioCo;
     float precioAl;
@@ -81,7 +82,7 @@ int main() {
         printf("\n");
         printf("P [pagar]  V [volver]\n");
         scanf(" %c", &opcion);
-        
+
     } while (opcion == 'V' || opcion == 'v');
 
     if (opcion == 'P' || opcion == 'p') {
