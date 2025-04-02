@@ -5,7 +5,7 @@
 #include "cineDB.h"
 
 
-const char *CINEBD = "src\\BBDD\\cine.db"; // Ruta de la base de datos
+const char *CINEBD = "src\\BBDD\\bes.db"; // Ruta de la base de datos
 // Estructura para almacenar una película
 
 
@@ -325,7 +325,7 @@ int insert_libro(Libro *l){
     sqlite3_bind_text(stmt, 2, l->descripcion, strlen(l->descripcion), SQLITE_STATIC);
     sqlite3_bind_double(stmt, 3, l->precioCo);
     sqlite3_bind_double(stmt, 4, l->precioAl);
-    aqlite3_bind_text(stmt, 5, l->genero, strlen(l->genero), SQLITE_STATIC);
+    sqlite3_bind_text(stmt, 5, l->genero, strlen(l->genero), SQLITE_STATIC);
 
     int result = sqlite3_step(stmt);
     if (result != SQLITE_DONE) {
@@ -356,7 +356,7 @@ Libro* show_libro() {
         return NULL;
     }
 
-    Libro *libros = (Pelicula *)malloc(100 * sizeof(Pelicula));
+    Libro *libros = (Libro *)malloc(100 * sizeof(Libro));
     if (libros == NULL) {
         printf("Error al asignar memoria para las películas\n");
         sqlite3_finalize(stmt);
@@ -396,7 +396,7 @@ Libro* show_libro() {
             break;
         }
         strcpy(libros[r].genero, (const char *)genero);
-        
+
         r++;
     }
 

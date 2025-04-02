@@ -3,7 +3,7 @@
 #include <string.h>
 #include "webscrapMain.h"
 #include "../../../BBDD/cineDB.h" // Aquí se asume que insertarPelicula está definida
-int ccsave;
+int ccsave = 0;;
 void pyAlhondiga(void)
 {
     printf("Ejecutando el script de Python...\n");
