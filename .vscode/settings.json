@@ -1,6 +1,43 @@
 {
+<<<<<<< HEAD
     "C_Cpp.errorSquiggles": "enabled",
     "files.associations": {
         "stdlib.h": "c"
     }
+=======
+
+    "C_Cpp.errorSquiggles": "enabled"
+    "files.associations": {
+        "sqlite3.h": "c"
+    },
+    "sqltools.connections": [
+        {
+            "mysqlOptions": {
+                "authProtocol": "default",
+                "enableSsl": "Disabled"
+            },
+            "previewLimit": 50,
+            "server": "localhost",
+            "port": 3306,
+            "driver": "MySQL",
+            "name": "root",
+            "username": "root",
+            "database": "cine"
+        },
+        {
+            "mysqlOptions": {
+                "authProtocol": "default",
+                "enableSsl": "Disabled"
+            },
+            "previewLimit": 50,
+            "server": "localhost",
+            "port": 3306,
+            "driver": "TiDB",
+            "name": "T",
+            "database": "cine",
+            "username": "root"
+        }
+    ]
+
+>>>>>>> b69b461f9a0b1a77a75c25c6afb42f6d2ac66800
 }

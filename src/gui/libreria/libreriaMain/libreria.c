@@ -1,17 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "../../../BBDD/cineDB.h"
 
-#define MAX_LIBROS 100
+
+#define MAX_LIBROS 10
 #define MAX_TARJETAS 2
-
-typedef struct {
-    char nombre[50];
-    char genero[50];
-    char descripcion[100];
-    float precioCo;
-    float precioAl;
-} Libro;
 
 typedef struct {
     char numero[20]; 
@@ -20,35 +14,41 @@ typedef struct {
 } Tarjeta;
 
 void mostrarLibros(Libro *libros, int cuantoslibros) {
-    printf("\n¡Bienvenido a la librería!\n");
-    printf("Selecciona un libro\n\n");   
+    printf("Bienvenido a la libreria!\n");
+    printf("Seleccioaejaehnaurgayuna un libro\n\n");   
     for (int e = 0; e < cuantoslibros; e++) {
         printf("%d. Libro: %s\n", e + 1, libros[e].nombre);
     }
 }
 
 int main() {
+    printf("prueba");
     Libro *libros = malloc(MAX_LIBROS * sizeof(Libro));
     if (libros == NULL) {
         printf("Error al asignar memoria\n");
         return 1;
     }
 
+    printf("antes");
     // Inicialización de libros
-    strcpy(libros[0].nombre, "Sonic 2");
+    libros[0].nombre = "sonic2";
     strcpy(libros[0].descripcion, "desc");
     libros[0].precioCo = 1.0;
     libros[0].precioAl = 2.0;
+    strcpy(libros[0].genero, "sexo");
+    printf("despues");
 
-    strcpy(libros[1].nombre, "Sonic 3");
+    libros[1].nombre = "sonic3";
     strcpy(libros[1].descripcion, "desc");
     libros[1].precioCo = 1.0;
     libros[1].precioAl = 2.0;
+    strcpy(libros[1].genero, "sexo");
 
-    strcpy(libros[2].nombre, "Sonic 1");
+    libros[2].nombre = "sonic1";
     strcpy(libros[2].descripcion, "desc");
     libros[2].precioCo = 1.0;
     libros[2].precioAl = 2.0;
+    strcpy(libros[2].genero, "sexo");
 
     // Inicialización de tarjetas de crédito
     Tarjeta tarjetas[MAX_TARJETAS] = {
@@ -63,7 +63,7 @@ int main() {
     do {
         mostrarLibros(libros, cuantoslibros);
 
-        printf("\nSelecciona un libro: ");
+        printf("\nSeleccioaeaeaeaeana un libro: ");
         scanf("%d", &numeroUsuario);
         printf("\n");
 
