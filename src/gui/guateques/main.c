@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "guateque.h"
+#include "guatequeDB.h"
 
 Guateque g1;
 Guateque g2;
@@ -47,27 +48,23 @@ void prepararDatosPrueba(void){
     nguateques = 2;
 }
 
+void guardarBD(Guateque g){
+    insertar_guateque(g);
+    for (int i = 0; i < g.neventos; i++)
+    {
+        insertar_evento(g.eventos[i], g);
+    }
+    
+}
+
 
 int main(void){
-    prepararDatosPrueba();
-    int opcion = 1;
-    while (opcion != 0)
+    for (int i = 0; i < nguateques; i++)
     {
-        imprimirGuateques(guateques, 2);
-        scanf("%d", &opcion);
-        if(opcion <= nguateques && opcion > 0){
-            Guateque guateque = guateques[opcion-1];
-            imprimirEventos(guateque);
-            scanf("%d", &opcion);
-            if(opcion <= guateque.neventos && opcion > 0){
-                printf("Guardado el evento %s\n", guateque.eventos[opcion-1].nombre); //No lo he guardado jeje...
-            }
-
-            break;
-        }else if(opcion != 0){
-            printf("Error, no existe ese guateque\n");
-        }
+        Guateque g = guateques[i];
+        guardarBD(g);
     }
+    
     
     for (int i = 0; i < nguateques; i++)
     {
