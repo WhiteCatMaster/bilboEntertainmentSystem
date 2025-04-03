@@ -4,6 +4,7 @@ typedef struct
     float precio;
     char* fecha;
     char* descripcion;
+    int id;
 } Evento;
 
 typedef struct 
@@ -12,6 +13,7 @@ typedef struct
     char* direccion;
     Evento *eventos;
     int neventos;
+    int id;
 } Guateque;
 
 void imprimirEventos(Guateque g);
