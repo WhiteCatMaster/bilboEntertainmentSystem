@@ -3,9 +3,9 @@
 #include <stdlib.h>
 #include "sqlite3.h"
 #include "cineDB.h"
+int tamLibros = 0;
 
-
-const char *CINEBD = "src\\BBDD\\cine.db"; // Ruta de la base de datos
+const char *CINEBD = "src\\BBDD\\bes.db"; // Ruta de la base de datos
 // Estructura para almacenar una película
 
 
@@ -325,7 +325,7 @@ int insert_libro(Libro *l){
     sqlite3_bind_text(stmt, 2, l->descripcion, strlen(l->descripcion), SQLITE_STATIC);
     sqlite3_bind_double(stmt, 3, l->precioCo);
     sqlite3_bind_double(stmt, 4, l->precioAl);
-    aqlite3_bind_text(stmt, 5, l->genero, strlen(l->genero), SQLITE_STATIC);
+    sqlite3_bind_text(stmt, 5, l->genero, strlen(l->genero), SQLITE_STATIC);
 
     int result = sqlite3_step(stmt);
     if (result != SQLITE_DONE) {
@@ -356,7 +356,7 @@ Libro* show_libro() {
         return NULL;
     }
 
-    Libro *libros = (Pelicula *)malloc(100 * sizeof(Pelicula));
+    Libro *libros = (Libro *)malloc(100 * sizeof(Libro));
     if (libros == NULL) {
         printf("Error al asignar memoria para las películas\n");
         sqlite3_finalize(stmt);
@@ -365,7 +365,7 @@ Libro* show_libro() {
     }
 
     int r = 0;
-    printf("===================================\n");
+    printf("=================sexo2==================\n");
     while (sqlite3_step(stmt) == SQLITE_ROW) {
         // Asignar memoria dinámica para cada campo
         const unsigned char *nombre = sqlite3_column_text(stmt, 0);
@@ -374,8 +374,8 @@ Libro* show_libro() {
             printf("Error al asignar memoria para el título\n");
             break;
         }
+        
         strcpy(libros[r].nombre, (const char *)nombre);
-
         
 
         const unsigned char *descripcion = sqlite3_column_text(stmt, 1);
@@ -396,14 +396,13 @@ Libro* show_libro() {
             break;
         }
         strcpy(libros[r].genero, (const char *)genero);
-        
         r++;
     }
 
     // Finalizar y cerrar la base de datos
     sqlite3_finalize(stmt);
     sqlite3_close(db);
-
+    printf("libros: %s\n", libros[0].nombre);
     return libros;
 }
 

@@ -23,10 +23,10 @@ typedef struct {
 
 typedef struct {
     char *nombre;
-    char descripcion[20];
+    char *descripcion;
     float precioCo;
     float precioAl;
-    char genero[20];
+    char *genero;
 } Libro;
 
 int  insert_pelicula(Pelicula *p);

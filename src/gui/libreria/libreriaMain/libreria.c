@@ -4,6 +4,7 @@
 #include "../../../BBDD/cineDB.h"
 
 
+
 #define MAX_LIBROS 10
 #define MAX_TARJETAS 2
 
@@ -14,8 +15,9 @@ typedef struct {
 } Tarjeta;
 
 void mostrarLibros(Libro *libros, int cuantoslibros) {
-    printf("Bienvenido a la libreria!\n");
-    printf("Seleccioaejaehnaurgayuna un libro\n\n");   
+    printf("Bienvenido sexo a la libreria!\n");
+    printf("M [Inventario]\n");
+    printf("Seleccioana un libro\n\n");   
     for (int e = 0; e < cuantoslibros; e++) {
         printf("%d. Libro: %s\n", e + 1, libros[e].nombre);
     }
@@ -29,26 +31,24 @@ int main() {
         return 1;
     }
 
-    printf("antes");
     // Inicialización de libros
     libros[0].nombre = "sonic2";
-    strcpy(libros[0].descripcion, "desc");
+    libros[0].descripcion = "sonic1";
     libros[0].precioCo = 1.0;
     libros[0].precioAl = 2.0;
-    strcpy(libros[0].genero, "sexo");
-    printf("despues");
+    libros[0].genero = "sonic1";
 
     libros[1].nombre = "sonic3";
-    strcpy(libros[1].descripcion, "desc");
+    libros[1].descripcion = "sonic1";
     libros[1].precioCo = 1.0;
     libros[1].precioAl = 2.0;
-    strcpy(libros[1].genero, "sexo");
+    libros[1].genero = "sonic1";
 
     libros[2].nombre = "sonic1";
-    strcpy(libros[2].descripcion, "desc");
+    libros[2].descripcion = "sonic1";
     libros[2].precioCo = 1.0;
     libros[2].precioAl = 2.0;
-    strcpy(libros[2].genero, "sexo");
+    libros[2].genero = "sonic1";
 
     // Inicialización de tarjetas de crédito
     Tarjeta tarjetas[MAX_TARJETAS] = {
