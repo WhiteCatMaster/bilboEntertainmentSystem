@@ -29,6 +29,12 @@ typedef struct {
     char *genero;
 } Libro;
 
+typedef struct {
+    char numero[20];
+    int CVV;
+    float saldo;
+}Tarjeta;
+
 int  insert_pelicula(Pelicula *p);
 Pelicula* show_pelicula(void);
 Pelicula* peliculas_by_cine(Pelicula *p, char *cine);
@@ -42,4 +48,17 @@ int insert_libro(Libro *l);
 Libro* show_libro(void);
 int delete_libro(Libro *l);
 int borrarbdLibro();
+int insert_inventario(Libro *l, int dia, int mes, int ano);
+Libro* show_inventario(void);
+int delete_libroInventario(Libro *l);
+int borrarbdInventario();
+int getdiaInventario();
+int getmesInventario();
+int getanoInventario();
+int insert_tarjeta(Tarjeta t);
+Tarjeta* show_tarjeta(void);
+int delete_tarjeta(Tarjeta t);
+int borrarbdTarjeta();
+int update_saldo(Tarjeta t, double saldo);
+
 #endif // CINE_DB_H
