@@ -153,13 +153,19 @@ Evento* get_eventos(){
     {
         eventos[i].id = sqlite3_column_int(stmt, 0); 
 
-        eventos[i].nombre = (char *) sqlite3_column_text(stmt, 1);
+        char* nombre = (char *) sqlite3_column_text(stmt, 1);
+        eventos[i].nombre = malloc(strlen(nombre)+1);
+        strcpy(eventos[i].nombre, nombre);
 
         eventos[i].precio = sqlite3_column_double(stmt, 2);
 
-        eventos[i].fecha = (char *) sqlite3_column_text(stmt, 3);
+        char* fecha = (char *) sqlite3_column_text(stmt, 3);
+        eventos[i].fecha = malloc(strlen(fecha)+1);
+        strcpy(eventos[i].fecha, fecha);
 
-        eventos[i].descripcion = (char *) sqlite3_column_text(stmt, 4);
+        char* descripcion = (char *) sqlite3_column_text(stmt, 4);
+        eventos[i].descripcion = malloc(strlen(descripcion)+1);
+        strcpy(eventos[i].descripcion, descripcion);
         
         eventos[i].idg = sqlite3_column_int(stmt, 5);
         nevenDB++;
@@ -204,10 +210,13 @@ Guateque* get_guateques() {
         nguatDB++;
         guateques[i].id = sqlite3_column_int(stmt, 0); 
 
-        guateques[i].nombre = (char *) sqlite3_column_text(stmt, 1);
-        printf("%s", guateques[i].nombre);
+        char* nombre = (char *) sqlite3_column_text(stmt, 1);
+        guateques[i].nombre = malloc(strlen(nombre)+1);
+        strcpy(guateques[i].nombre, nombre);
 
-        guateques[i].direccion = (char *) sqlite3_column_text(stmt, 2);
+        char* direccion = (char *) sqlite3_column_text(stmt, 2);
+        guateques[i].direccion = malloc(strlen(direccion)+1);
+        strcpy(guateques[i].direccion, direccion);
         
         guateques[i].eventos = malloc(neventos*sizeof(Evento));
         Evento* eventos = get_eventos();
@@ -220,14 +229,11 @@ Guateque* get_guateques() {
         }
         guateques[i].neventos = neventos;
 
-
     }
-    
 
     // Finalizar y cerrar la base de datos
     sqlite3_finalize(stmt);
     sqlite3_close(db);
-
     return guateques;
 }
 

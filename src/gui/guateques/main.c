@@ -77,8 +77,7 @@ int main(void){
             case 1:
                 imprimirGuateques(guateque, nguatDB);
                 scanf("%d", &opcion);
-                printf("%snombre", guateque[opcion].nombre);
-                imprimirEventos(guateque[opcion]);
+                imprimirEventos(guateque[opcion-1]);
                 break;
             case 2:
                 Guateque nuevoguateque;
@@ -115,7 +114,16 @@ int main(void){
     
     for (int i = 0; i < nguateques; i++)
     {
+        for (int j = 0; i < nevenDB; i++)
+        {
+            free(guateque[i].eventos[j].nombre);
+            free(guateque[i].eventos[j].descripcion);
+            free(guateque[i].eventos[j].fecha);
+        }
+        
        free(guateque[i].eventos);
+       free(guateque[i].nombre);
+       free(guateque[i].direccion);
 
     }
     free(guateque);
