@@ -54,47 +54,71 @@ void guardarBD(Guateque g){
     insertar_guateque(g);
     for (int i = 0; i < g.neventos; i++)
     {
-        insertar_evento(g.eventos[i], g);
+        insertar_evento(g.eventos[i]);
     }
     
 }
 
 
 int main(void){
+    Guateque* guateque;
     int opcion = 1;
     while(opcion != 0){
+        guateque = get_guateques();
         printf("Bienvenido al gestor de guateques, elige que quieres hacer:\n");
-        printf("    0) Salir");
-        printf("    1) Consultar guateques y/o eventos");
-        printf("    2) Resgistrar un nuevo guateque");
-        printf("    3) Registrar un nuevo evento");
-    
+        printf("    0) Salir\n");
+        printf("    1) Consultar guateques y/o eventos\n");
+        printf("    2) Resgistrar un nuevo guateque\n");
+        printf("    3) Registrar un nuevo evento\n");
+        scanf("%d", &opcion);
+        switch (opcion){
+            case 0:
+                break;
+            case 1:
+                imprimirGuateques(guateque, nguatDB);
+                scanf("%d", &opcion);
+                printf("%snombre", guateque[opcion].nombre);
+                imprimirEventos(guateque[opcion]);
+                break;
+            case 2:
+                Guateque nuevoguateque;
+                printf("Introduce el nombre del guateque:\n");
+                scanf("%s", nuevoguateque.nombre);
+                printf("Introduce la direccion:\n");
+                scanf("%s", nuevoguateque.direccion);
+                nuevoguateque.id = obtenerIdGuateque();
+                insertar_guateque(nuevoguateque);
+                printf("Se ha guardado el guateque:\n");
+                break;
+            case 3:
+                Evento evento;
+                printf("Introduce el nombre del evento:\n");
+                scanf("%s", evento.nombre);
+                printf("Introduce la fecha AAAA/MM/DD:\n");
+                scanf("%s", evento.fecha);
+                printf("Introduce el precio del evento:\n");
+                scanf("%f", &evento.precio);
+                printf("Introduce una breve descripcion:\n");
+                scanf("%s", evento.descripcion);
+                evento.id = obtenerIdEvento();
+                printf("En cual de estos guateques va a tener lugar?\n");
+                imprimirGuateques(guateque, nguatDB);
+                int id;
+                scanf("%d", &id);
+                evento.idg = guateque[id-1].id;
+                break;
+            default:
+                printf("No es una opcion valida");
+        }
     }
     
-
-
+    
     for (int i = 0; i < nguateques; i++)
     {
-        Guateque g = guateques[i];
-        guardarBD(g);
+       free(guateque[i].eventos);
 
     }
-    Guateque* guateques2 = get_guateques();
-    //Evento* ebentos = get_eventos();
-    
-    for (int i = 0; i < nguateques; i++)
-    {
-       free(guateques[i].eventos);
-
-    }
-    free(guateques);
-
-    for (int i = 0; i < nguatDB; i++)
-    {
-        free(guateques2[i].eventos);
-    }
-    
-    free(guateques2);
+    free(guateque);
 
     return 0;
 }

@@ -35,7 +35,7 @@ int insertar_guateque(Guateque g){
     }
 }
 
-int insertar_evento(Evento e, Guateque g){
+int insertar_evento(Evento e){
     sqlite3 *db;
     sqlite3_stmt *stmt;
     if (sqlite3_open(GUATEQUEDB, &db) != SQLITE_OK) {
@@ -54,7 +54,7 @@ int insertar_evento(Evento e, Guateque g){
     sqlite3_bind_double(stmt,3, e.precio);
     sqlite3_bind_text(stmt, 4, e.fecha, strlen(e.fecha), SQLITE_STATIC);
     sqlite3_bind_text(stmt, 5, e.descripcion, strlen(e.descripcion), SQLITE_STATIC);
-    sqlite3_bind_int(stmt, 6, g.id);
+    sqlite3_bind_int(stmt, 6, e.idg);
 
     int result = sqlite3_step(stmt);
     if (result != SQLITE_DONE) {
@@ -154,7 +154,6 @@ Evento* get_eventos(){
         eventos[i].id = sqlite3_column_int(stmt, 0); 
 
         eventos[i].nombre = (char *) sqlite3_column_text(stmt, 1);
-        printf("Nombre cargadoas %s\n", eventos[i].nombre);
 
         eventos[i].precio = sqlite3_column_double(stmt, 2);
 
@@ -206,6 +205,7 @@ Guateque* get_guateques() {
         guateques[i].id = sqlite3_column_int(stmt, 0); 
 
         guateques[i].nombre = (char *) sqlite3_column_text(stmt, 1);
+        printf("%s", guateques[i].nombre);
 
         guateques[i].direccion = (char *) sqlite3_column_text(stmt, 2);
         
@@ -229,4 +229,54 @@ Guateque* get_guateques() {
     sqlite3_close(db);
 
     return guateques;
+}
+
+int obtenerIdGuateque(){
+
+    sqlite3 *db;
+    sqlite3_stmt *stmt;
+    if (sqlite3_open(GUATEQUEDB, &db) != SQLITE_OK) {
+        printf("Error al abrir la base de datos: %s\n", sqlite3_errmsg(db));
+        return 0;
+    }
+
+    char *select = "SELECT MAX(ID_G) FROM GUATEQUE";
+    if (sqlite3_prepare_v2(db, select, -1, &stmt, NULL) != SQLITE_OK) {
+        printf("Error al preparar la declaración SQL: %s\n", sqlite3_errmsg(db));
+        sqlite3_close(db);
+        return 0;
+    }
+
+    int max = sqlite3_step(stmt);
+    
+
+    // Finalizar y cerrar la base de datos
+    sqlite3_finalize(stmt);
+    sqlite3_close(db);
+    return max + 1;
+}
+
+int obtenerIdEvento(){
+
+    sqlite3 *db;
+    sqlite3_stmt *stmt;
+    if (sqlite3_open(GUATEQUEDB, &db) != SQLITE_OK) {
+        printf("Error al abrir la base de datos: %s\n", sqlite3_errmsg(db));
+        return 0;
+    }
+
+    char *select = "SELECT MAX(ID_E) FROM EVENTO";
+    if (sqlite3_prepare_v2(db, select, -1, &stmt, NULL) != SQLITE_OK) {
+        printf("Error al preparar la declaración SQL: %s\n", sqlite3_errmsg(db));
+        sqlite3_close(db);
+        return 0;
+    }
+
+    int max = sqlite3_step(stmt);
+    
+
+    // Finalizar y cerrar la base de datos
+    sqlite3_finalize(stmt);
+    sqlite3_close(db);
+    return max + 1;
 }

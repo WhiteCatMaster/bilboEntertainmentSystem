@@ -1,9 +1,11 @@
 extern int nguatDB;
 extern int nevenDB;
 int insertar_guateque(Guateque g);
-int insertar_evento(Evento e, Guateque g);
+int insertar_evento(Evento e);
 int contar_guateques();
 Guateque* get_guateques();
 Evento* get_eventos();
 int contar_eventos();
 int contar_guateques();
+int obtenerIdGuateque();
+int obtenerIdEvento();
