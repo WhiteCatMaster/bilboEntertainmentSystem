@@ -2,96 +2,177 @@
 #include <stdlib.h>
 #include <string.h>
 #include "../../../BBDD/cineDB.h"
+#include "libreria.h"
+#define CINE_DB_H //PROBAR LUEGO A QUITAR
 
+#define MAX_LINE 1000
 
+int mostrarLibrosDisponibles() {
+    int opcion;
+    int resultado;
 
-#define MAX_LIBROS 10
-#define MAX_TARJETAS 2
+    printf("-----------------------------\n");
+    printf("LIBROS DISPONIBLES:\n");
+    Libro *libros;
+    int cuantosLibros = 0;
 
-typedef struct {
-    char numero[20]; 
-    int CVV;
-    float saldo;
-} Tarjeta;
+    int comprobacion = 0;
+    comprobacion = count_libros();
 
-void mostrarLibros(Libro *libros, int cuantoslibros) {
-    printf("Bienvenido sexo a la libreria!\n");
-    printf("M [Inventario]\n");
-    printf("Seleccioana un libro\n\n");   
-    for (int e = 0; e < cuantoslibros; e++) {
-        printf("%d. Libro: %s\n", e + 1, libros[e].nombre);
+    if(comprobacion == 0) {
+        printf("BD VACIA\n");
+        borrarbdLibro();
+        leer_csv("C:/Users/aitor.sagarduy/Downloads/LibrosBien.csv");
+    } else {
+        printf("BD LLENA");
     }
+
+    libros = show_libro();
+    cuantosLibros = count_libros();
+
+    for(int i=0;i<cuantosLibros;i++) {
+        printf("%d. %s\n", i+1, libros[i].nombre);
+    }
+    printf("-----------------------------\n");
+    printf("Selecciona un libro:\n");
+
+    scanf(" %d", &opcion);
+    if(opcion>cuantosLibros) {
+        printf("Por favor, selecciona un libro valido...\n");
+        mostrarLibrosDisponibles();
+    } else if(opcion < 0) {
+        printf("Por favor, selecciona un libro valido...\n");
+        mostrarLibrosDisponibles();
+    } else {
+        resultado = unLibro(libros, opcion-1);
+
+    }
+
+    return resultado;
 }
 
-int main() {
-    printf("prueba");
-    Libro *libros = malloc(MAX_LIBROS * sizeof(Libro));
-    if (libros == NULL) {
-        printf("Error al asignar memoria\n");
-        return 1;
+int unLibro(Libro *libros, int num) {
+    char opcion2;
+    int devolver = 0;
+
+    printf("-----------------------------\n"); 
+    printf("Ficha del libro:\n");
+    printf("Nombre: %s\n", libros[num].nombre);
+    printf("Genero: %s\n", libros[num].genero);
+    printf("Descripcion: %s\n", libros[num].descripcion);
+    printf("Precio compra: %f\n", libros[num].precioCo);
+    printf("Precio alquilado: %d\n", libros[num].precioAl);
+    printf("-----------------------------\n");
+    printf("P [Pagar]\n");
+    printf("V [Volver]\n");
+    while (getchar() != '\n');
+    scanf("%c", &opcion2);
+
+    if(opcion2 == 'V') {
+        while (getchar() != '\n');
+        mostrarLibrosDisponibles();
+    } else if(opcion2 == 'P') {
+        devolver = num;
+    } else {
+        unLibro(libros, num);
     }
 
-    // Inicialización de libros
-    libros[0].nombre = "sonic2";
-    libros[0].descripcion = "sonic1";
-    libros[0].precioCo = 1.0;
-    libros[0].precioAl = 2.0;
-    libros[0].genero = "sonic1";
-
-    libros[1].nombre = "sonic3";
-    libros[1].descripcion = "sonic1";
-    libros[1].precioCo = 1.0;
-    libros[1].precioAl = 2.0;
-    libros[1].genero = "sonic1";
-
-    libros[2].nombre = "sonic1";
-    libros[2].descripcion = "sonic1";
-    libros[2].precioCo = 1.0;
-    libros[2].precioAl = 2.0;
-    libros[2].genero = "sonic1";
-
-    // Inicialización de tarjetas de crédito
-    Tarjeta tarjetas[MAX_TARJETAS] = {
-        {"1234567812345678", 123, 323.39},
-        {"9876543298765432", 456, 69.42}
-    };
-
-    int cuantoslibros = 3; // Número de libros predefinidos
-    int numeroUsuario;
-    char opcion;
-    
-    do {
-        mostrarLibros(libros, cuantoslibros);
-
-        printf("\nSeleccioaeaeaeaeana un libro: ");
-        scanf("%d", &numeroUsuario);
-        printf("\n");
-
-        if(numeroUsuario > cuantoslibros || numeroUsuario <= 0) {
-            printf("ERROR: ELIGE UN LIBRO VÁLIDO\n");
-            continue;
-        }
-
-        printf("\n¡LIBRO SELECCIONADO DE FORMA CORRECTA!\n\n");
-        printf("Ficha técnica:\n");
-        printf("    Libro seleccionado: %s\n", libros[numeroUsuario - 1].nombre);
-        printf("    Descripción: %s\n", libros[numeroUsuario - 1].descripcion);
-        printf("    Precio de compra: %.2f\n", libros[numeroUsuario - 1].precioCo);
-        printf("    Precio de alquiler: %.2f\n", libros[numeroUsuario - 1].precioAl);
-
-        printf("\n");
-        printf("P [pagar]  V [volver]\n");
-        scanf(" %c", &opcion);
-
-    } while (opcion == 'V' || opcion == 'v');
-
-    if (opcion == 'P' || opcion == 'p') {
-        printf("\nTarjetas registradas:\n");
-        for (int i = 0; i < MAX_TARJETAS; i++) {
-            printf("Tarjeta %d: Número: %s, CVV: %d\n", i + 1, tarjetas[i].numero, tarjetas[i].CVV);
-        }
-    }
-
-    free(libros);
-    return 0;
+    return devolver;
 }
+
+Libro pagarTarjetas(Tarjeta **tarjetas, int numlibro, int numtarjetas) {
+    Libro *libros;
+    int cuantosLibros = 0;
+
+    libros = show_libro();
+
+    Libro libroSeleccionado;
+    Libro *libropuntero;
+    libropuntero = &libroSeleccionado;
+
+    libroSeleccionado = libros[numlibro];
+
+    int seleccion;
+    int seleccionado;
+    char seleccion2;
+
+    printf("-----------------------------\n"); 
+    printf("Tarjetas disponibles:\n");
+    for(int i = 0; i < numtarjetas; i++) {
+        printf("%d. Numero:%s CVV:%d Saldo:%f\n",i + 1, tarjetas[i]->numero, tarjetas[i]->CVV, tarjetas[i]->saldo);
+    }
+    printf("-----------------------------\n");
+    printf("Selecciona una tarjeta:\n");
+    scanf("%d", &seleccion);
+    seleccionado = seleccion;
+
+    if(seleccion < 0) {
+        printf("Por favor, selecciona una tarjeta valida...\n");
+        pagarTarjetas(tarjetas ,numlibro, numtarjetas);
+    } else if (seleccion > numtarjetas) {
+        printf("Por favor, selecciona una tarjeta valida...\n");
+        pagarTarjetas(tarjetas ,numlibro, numtarjetas);
+    } else {
+        while (getchar() != '\n');
+        printf("-----------------------------\n");
+        printf("Comprar [C] o Alquilar [A]?\n");
+        scanf("%c", &seleccion2);
+
+        if(seleccion2 == 'C') {
+            if(tarjetas[seleccionado-1]->saldo > libroSeleccionado.precioCo) {
+                printf("Compra finalizada; el libro se ha añadido al inventario\n");
+                delete_libro(libropuntero);
+            } else {
+                printf("No tienes suficiente saldo para comprar el libro.\n");
+            }
+        } else if(seleccion2 == 'A') {
+            if(tarjetas[seleccionado-1]->saldo > libroSeleccionado.precioAl) {
+                printf("Compra finalizada; el libro se ha anadido al inventario\n");
+                delete_libro(libropuntero);
+            } else {
+                printf("No tienes suficiente saldo para comprar el libro.\n");
+            }
+
+        } else {
+            pagarTarjetas(tarjetas, numlibro, numtarjetas);
+        }
+    }
+
+    return libroSeleccionado;
+}
+
+
+void leer_csv(const char *filename) {
+    FILE *file = fopen(filename, "r");
+    if (!file) {
+        perror("Error al abrir el archivo");
+        return;
+    }
+
+    char line[MAX_LINE];
+
+    while (fgets(line, sizeof(line), file)) {
+        char *nombre, *descripcion, *genero;
+        float precioCo, precioAl;
+
+        // Usar ";" como delimitador
+        nombre = strtok(line, ";");
+        descripcion = strtok(NULL, ";");
+        precioCo = atof(strtok(NULL, ";"));
+        precioAl = atof(strtok(NULL, ";"));
+        genero = strtok(NULL, ";\n");
+       
+        Libro lib;
+        lib.nombre =nombre;
+        lib.descripcion= descripcion;
+        lib.precioCo = precioCo;
+        lib.precioAl = precioAl; 
+        lib.genero= genero;
+
+        insert_libro(&lib); // Insertar el libro en la base de datos
+
+    }
+
+    fclose(file);
+}
+

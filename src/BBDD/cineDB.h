@@ -42,4 +42,5 @@ int insert_libro(Libro *l);
 Libro* show_libro(void);
 int delete_libro(Libro *l);
 int borrarbdLibro();
+int count_libros();
 #endif // CINE_DB_H
