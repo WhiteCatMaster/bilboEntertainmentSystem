@@ -6,7 +6,7 @@ if len(sys.argv) < 2:
     print("Usage: python movies.py <movie_id>")
     sys.exit(1)
 
-what = sys.argv[1]
+what = sys.argv[2]
 
 url = f"https://api.themoviedb.org/3/movie/{what}?language=en-US&page=1"
 

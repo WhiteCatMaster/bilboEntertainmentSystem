@@ -100,6 +100,8 @@ void consultorAPI(void)
     }
     pclose(fp);
 }
+
+
 /*
 int main(void)
 {

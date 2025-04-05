@@ -39,7 +39,7 @@ int main() {
     char c;
     while (c != '0'){
         leerTcine();
-        //consultorAPI();
+        consultorAPI();
         printf("===================================\n ");
         printf("(0)-- > comprar entradas < --\n ");
         printf("(1)-- > añadir critica < --\n ");
