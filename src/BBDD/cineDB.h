@@ -39,7 +39,8 @@ Critica* critica_by_pelicula(Critica *c, char *pelicula);
 Critica* critica_by_usuario(Critica *c, char *usuario);
 int borrarbdCritica();
 int insert_libro(Libro *l);
-int show_libro(void);
+Libro* show_libro(void);
 int delete_libro(Libro *l);
-
+int borrarbdLibro();
+int count_libros();
 #endif // CINE_DB_H
