@@ -425,3 +425,27 @@ Libro* show_libro() {
     return peliculas;
 }
 
+int borrarLibros(){
+    sqlite3 *db;
+    sqlite3_stmt *stmt;
+    if (sqlite3_open(CINEBD, &db) != SQLITE_OK) {
+        printf("Error al abrir la base de datos: %s\n", sqlite3_errmsg(db));
+        return 1;
+    }
+
+    char *deleteL = "DELETE FROM LIBRO";
+    if (sqlite3_prepare_v2(db, deleteL, -1, &stmt, NULL) != SQLITE_OK) {
+        printf("Error al preparar la declaración SQL: %s\n", sqlite3_errmsg(db));
+        sqlite3_close(db);
+        return 1;
+    }
+
+    int result = sqlite3_step(stmt);
+    if (result != SQLITE_DONE) {
+        printf("Error al borrar la tabla\n");
+        return 1;
+    } else {
+        printf("Tabla borrada correctamente\n");
+        return 0;
+    }
+}
