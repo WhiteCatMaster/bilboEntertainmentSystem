@@ -5,6 +5,7 @@ typedef struct
     char* fecha;
     char* descripcion;
     int id;
+    int idg;
 } Evento;
 
 typedef struct 
