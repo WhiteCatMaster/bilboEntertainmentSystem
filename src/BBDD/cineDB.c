@@ -5,7 +5,7 @@
 #include "cineDB.h"
 
 
-const char *CINEBD = "src\\BBDD\\cine.db"; // Ruta de la base de datos
+const char *CINEBD = "src\\BBDD\\bes.db"; // Ruta de la base de datos
 // Estructura para almacenar una película
 
 
@@ -315,7 +315,7 @@ int insert_libro(Libro *l){
         printf("Error al abrir la base de datos: %s\n", sqlite3_errmsg(db));
         return 1;
     }
-    char *insertL = "INSERT INTO LIBRO(NOMBRE, DESCRIPCION, PCO, PAL) VALUES (?, ?, ?, ?)";
+    char *insertL = "INSERT INTO LIBRO(NOMBRE, DESCRIPCION, PCO, PAL, GENERO) VALUES (?, ?, ?, ?, ?)";
     if (sqlite3_prepare_v2(db, insertL, -1, &stmt, NULL) != SQLITE_OK) {
         printf("Error al preparar la declaración SQL: %s\n", sqlite3_errmsg(db));
         sqlite3_close(db);
@@ -325,6 +325,7 @@ int insert_libro(Libro *l){
     sqlite3_bind_text(stmt, 2, l->descripcion, strlen(l->descripcion), SQLITE_STATIC);
     sqlite3_bind_double(stmt, 3, l->precioCo);
     sqlite3_bind_double(stmt, 4, l->precioAl);
+    sqlite3_bind_text(stmt, 5, l->genero, strlen(l->genero), SQLITE_STATIC);
 
     int result = sqlite3_step(stmt);
     if (result != SQLITE_DONE) {
@@ -348,15 +349,15 @@ Libro* show_libro() {
     }
     // printf("Base de datos abierta\n");
 
-    char *selectP = "SELECT * FROM PELICULA";
-    if (sqlite3_prepare_v2(db, selectP, -1, &stmt, NULL) != SQLITE_OK) {
+    char *selectL = "SELECT * FROM LIBRO";
+    if (sqlite3_prepare_v2(db, selectL, -1, &stmt, NULL) != SQLITE_OK) {
         printf("Error al preparar la declaración SQL: %s\n", sqlite3_errmsg(db));
         sqlite3_close(db);
         return NULL;
     }
 
-    Pelicula *peliculas = (Pelicula *)malloc(100 * sizeof(Pelicula));
-    if (peliculas == NULL) {
+    Libro *libros = (Libro *)malloc(100 * sizeof(Libro));
+    if (libros == NULL) {
         printf("Error al asignar memoria para las películas\n");
         sqlite3_finalize(stmt);
         sqlite3_close(db);
@@ -367,54 +368,35 @@ Libro* show_libro() {
     printf("===================================\n");
     while (sqlite3_step(stmt) == SQLITE_ROW) {
         // Asignar memoria dinámica para cada campo
-        const unsigned char *titulo = sqlite3_column_text(stmt, 0);
-        peliculas[r].titulo = malloc(strlen((const char *)titulo) + 1);
-        if (peliculas[r].titulo == NULL) {
+        const unsigned char *nombre = sqlite3_column_text(stmt, 0);
+        libros[r].nombre = malloc(strlen((const char *)nombre) + 1);
+        if (libros[r].nombre == NULL) {
             printf("Error al asignar memoria para el título\n");
             break;
         }
-        strcpy(peliculas[r].titulo, (const char *)titulo);
+        strcpy(libros[r].nombre, (const char *)nombre);
 
-        peliculas[r].hora = sqlite3_column_double(stmt, 1);
+        
 
-        const unsigned char *descripcion = sqlite3_column_text(stmt, 2);
-        peliculas[r].descripcion = malloc(strlen((const char *)descripcion) + 1);
-        if (peliculas[r].descripcion == NULL) {
+        const unsigned char *descripcion = sqlite3_column_text(stmt, 1);
+        libros[r].descripcion = malloc(strlen((const char *)descripcion) + 1);
+        if (libros[r].descripcion == NULL) {
             printf("Error al asignar memoria para la descripción\n");
             break;
         }
-        strcpy(peliculas[r].descripcion, (const char *)descripcion);
+        strcpy(libros[r].descripcion, (const char *)descripcion);     
+        libros[r].precioAl = sqlite3_column_double(stmt, 2);
+        libros[r].precioCo = sqlite3_column_double(stmt, 3);
+        // printf("Pelicula: %s\n", peliculas[r].titulo);
 
-        const unsigned char *cine = sqlite3_column_text(stmt, 3);
-        peliculas[r].cine = malloc(strlen((const char *)cine) + 1);
-        if (peliculas[r].cine == NULL) {
-            printf("Error al asignar memoria para el cine\n");
-            break;
-        }
-        strcpy(peliculas[r].cine, (const char *)cine);
-
-        peliculas[r].salida = sqlite3_column_int(stmt, 4);
-        peliculas[r].precio = sqlite3_column_double(stmt, 5);
-
-        const unsigned char *genero = sqlite3_column_text(stmt, 6);
-        peliculas[r].genero = malloc(strlen((const char *)genero) + 1);
-        if (peliculas[r].genero == NULL) {
+        const unsigned char *genero = sqlite3_column_text(stmt, 4);
+        libros[r].genero = malloc(strlen((const char *)genero) + 1);
+        if (libros[r].genero == NULL) {
             printf("Error al asignar memoria para el género\n");
             break;
         }
-        strcpy(peliculas[r].genero, (const char *)genero);
+        strcpy(libros[r].genero, (const char *)genero);
 
-        const unsigned char *director = sqlite3_column_text(stmt, 7);
-        peliculas[r].director = malloc(strlen((const char *)director) + 1);
-        if (peliculas[r].director == NULL) {
-            printf("Error al asignar memoria para el director\n");
-            break;
-        }
-        strcpy(peliculas[r].director, (const char *)director);
-
-        peliculas[r].rating = sqlite3_column_int(stmt, 8);
-
-        // printf("Pelicula: %s\n", peliculas[r].titulo);
         r++;
     }
 
@@ -422,10 +404,38 @@ Libro* show_libro() {
     sqlite3_finalize(stmt);
     sqlite3_close(db);
 
-    return peliculas;
+    return libros;
 }
 
-int borrarLibros(){
+// eliminar libro
+int delete_libro(Libro *l){
+    sqlite3 *db;
+    sqlite3_stmt *stmt;
+    if (sqlite3_open(CINEBD, &db) != SQLITE_OK) {
+        printf("Error al abrir la base de datos: %s\n", sqlite3_errmsg(db));
+        return 1;
+    }
+
+    char *deleteL = "DELETE FROM LIBRO WHERE NOMBRE = ?";
+    if (sqlite3_prepare_v2(db, deleteL, -1, &stmt, NULL) != SQLITE_OK) {
+        printf("Error al preparar la declaración SQL: %s\n", sqlite3_errmsg(db));
+        sqlite3_close(db);
+        return 1;
+    }
+
+    sqlite3_bind_text(stmt, 1, l->nombre, strlen(l->nombre), SQLITE_STATIC);
+
+    int result = sqlite3_step(stmt);
+    if (result != SQLITE_DONE) {
+        printf("Error al borrar el libro\n");
+        return 1;
+    } else {
+        printf("Libro borrado correctamente\n");
+        return 0;
+    }
+}
+// borrar base de datos de libro
+int borrarbdLibro(){
     sqlite3 *db;
     sqlite3_stmt *stmt;
     if (sqlite3_open(CINEBD, &db) != SQLITE_OK) {
