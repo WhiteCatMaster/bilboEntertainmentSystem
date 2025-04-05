@@ -32,6 +32,7 @@ void ejecutar_programa(const char *comando) {
 
 int main() {
     pyAlhondiga();
+    borrarbdLibro();
   	// system("cd ..\\mano");
     // ejecutar_programa("..\\mano\\controlxdDedos.exe");
 

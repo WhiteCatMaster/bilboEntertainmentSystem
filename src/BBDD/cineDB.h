@@ -48,6 +48,7 @@ int insert_libro(Libro *l);
 Libro* show_libro(void);
 int delete_libro(Libro *l);
 int borrarbdLibro();
+<<<<<<< HEAD
 int insert_inventario(Libro *l, int dia, int mes, int ano);
 Libro* show_inventario(void);
 int delete_libroInventario(Libro *l);
@@ -61,4 +62,7 @@ int delete_tarjeta(Tarjeta t);
 int borrarbdTarjeta();
 int update_saldo(Tarjeta t, double saldo);
 
+=======
+int count_libros();
+>>>>>>> 08dedffa116b2e85c53a6de114ef88d7bdf8986b
 #endif // CINE_DB_H
