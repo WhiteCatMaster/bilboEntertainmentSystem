@@ -7,6 +7,7 @@
 
 const char *GUATEQUEDB = "guateque.db"; 
 
+
 int insertar_guateque(Guateque g){
     sqlite3 *db;
     sqlite3_stmt *stmt;
@@ -151,9 +152,6 @@ int contar_eventos_por_guateque(int id){
     return neventos;
 }
 
-int nguatDB = 0;
-int nevenDB = 0;
-
 Evento* get_eventos(){
     sqlite3 *db;
     sqlite3_stmt *stmt;
@@ -197,7 +195,6 @@ Evento* get_eventos(){
         strcpy(eventos[i].descripcion, descripcion);
         
         eventos[i].idg = sqlite3_column_int(stmt, 5);
-        nevenDB++;
     }
     
 
@@ -235,10 +232,10 @@ Guateque* get_guateques() {
     for (int i = 0; i < nguateques && sqlite3_step(stmt) == SQLITE_ROW; i++)
     {
         int ultevento = 0;
-        nguatDB++;
-        guateques[i].id = sqlite3_column_int(stmt, 0); 
+        int id = sqlite3_column_int(stmt, 0);
+        guateques[i].id = id; 
 
-        int neventos = contar_eventos_por_guateque(guateques[i].id);
+        int neventos = contar_eventos_por_guateque(id);
 
         char* nombre = (char *) sqlite3_column_text(stmt, 1);
         guateques[i].nombre = malloc(strlen(nombre)+1);
@@ -276,7 +273,7 @@ int obtenerIdGuateque(){
         return 0;
     }
 
-    char *select = "SELECT MAX(ID_G) FROM GUATEQUE";
+    char *select = "SELECT ID_G FROM GUATEQUE ORDER BY ID_G DESC LIMIT 1;";
     if (sqlite3_prepare_v2(db, select, -1, &stmt, NULL) != SQLITE_OK) {
         printf("Error al preparar la declaración SQL: %s\n", sqlite3_errmsg(db));
         sqlite3_close(db);
@@ -301,7 +298,7 @@ int obtenerIdEvento(){
         return 0;
     }
 
-    char *select = "SELECT MAX(ID_E) FROM EVENTO";
+    char *select = "SELECT ID_E FROM EVENTO ORDER BY ID_G DESC LIMIT 1;";
     if (sqlite3_prepare_v2(db, select, -1, &stmt, NULL) != SQLITE_OK) {
         printf("Error al preparar la declaración SQL: %s\n", sqlite3_errmsg(db));
         sqlite3_close(db);

@@ -75,37 +75,49 @@ int main(void){
             case 0:
                 break;
             case 1:
-                imprimirGuateques(guateque, nguatDB);
+                imprimirGuateques(guateque, contar_guateques());
                 scanf("%d", &opcion);
                 imprimirEventos(guateque[opcion-1]);
-                printf("A");
                 break;
             case 2:
                 Guateque nuevoguateque;
                 printf("Introduce el nombre del guateque:\n");
+                nuevoguateque.nombre = malloc(sizeof(char)*100);
                 scanf("%s", nuevoguateque.nombre);
                 printf("Introduce la direccion:\n");
+                nuevoguateque.direccion = malloc(sizeof(char)*100);
                 scanf("%s", nuevoguateque.direccion);
                 nuevoguateque.id = obtenerIdGuateque();
                 insertar_guateque(nuevoguateque);
                 printf("Se ha guardado el guateque:\n");
+                free(nuevoguateque.nombre);
+                free(nuevoguateque.direccion);
                 break;
             case 3:
                 Evento evento;
                 printf("Introduce el nombre del evento:\n");
+                evento.nombre = malloc(sizeof(char)*100);
                 scanf("%s", evento.nombre);
                 printf("Introduce la fecha AAAA/MM/DD:\n");
+                evento.fecha = malloc(sizeof(char)*100);
                 scanf("%s", evento.fecha);
                 printf("Introduce el precio del evento:\n");
                 scanf("%f", &evento.precio);
                 printf("Introduce una breve descripcion:\n");
+                evento.descripcion = malloc(sizeof(char)*100);
                 scanf("%s", evento.descripcion);
                 evento.id = obtenerIdEvento();
                 printf("En cual de estos guateques va a tener lugar?\n");
-                imprimirGuateques(guateque, nguatDB);
+                imprimirGuateques(guateque, contar_guateques());
                 int id;
                 scanf("%d", &id);
                 evento.idg = guateque[id-1].id;
+                insertar_evento(evento);
+                printf("%d", obtenerIdEvento());
+                printf("Se ha guardado el evento:\n");
+                free(evento.nombre);
+                free(evento.fecha);
+                free(evento.descripcion);
                 break;
             default:
                 printf("No es una opcion valida");
@@ -115,7 +127,7 @@ int main(void){
     
     for (int i = 0; i < nguateques; i++)
     {
-        for (int j = 0; i < nevenDB; i++)
+        for (int j = 0; i < contar_guateques(); i++)
         {
             free(guateque[i].eventos[j].nombre);
             free(guateque[i].eventos[j].descripcion);
