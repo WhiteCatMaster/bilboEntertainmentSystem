@@ -5,6 +5,7 @@ void imprimirEventos(Guateque g){
     printf("Nombre: %s, Direccion: %s\n", g.nombre, g.direccion);
     printf("Eventos:\n");
     printf("    0)Exit\n");
+    printf("%d",g.neventos);
     for (int i = 0; i < g.neventos; i++)
     {
         Evento e = g.eventos[i];

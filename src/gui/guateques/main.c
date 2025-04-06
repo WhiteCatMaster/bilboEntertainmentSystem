@@ -78,6 +78,7 @@ int main(void){
                 imprimirGuateques(guateque, nguatDB);
                 scanf("%d", &opcion);
                 imprimirEventos(guateque[opcion-1]);
+                printf("A");
                 break;
             case 2:
                 Guateque nuevoguateque;

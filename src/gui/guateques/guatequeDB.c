@@ -122,6 +122,35 @@ int contar_eventos(){
     return neventos;
 }
 
+int contar_eventos_por_guateque(int id){
+    int neventos = 0;
+    sqlite3 *db;
+    sqlite3_stmt *stmt;
+    if (sqlite3_open(GUATEQUEDB, &db) != SQLITE_OK) {
+        printf("Error al abrir la base de datos: %s\n", sqlite3_errmsg(db));
+        return 0;
+    }
+
+    char *select = "SELECT * FROM EVENTO WHERE ID_G == ?;";
+    sqlite3_bind_int(stmt, 1, id);
+    if (sqlite3_prepare_v2(db, select, -1, &stmt, NULL) != SQLITE_OK) {
+        printf("Error al preparar la declaración SQL: %s\n", sqlite3_errmsg(db));
+        sqlite3_close(db);
+        return 0;
+    }
+    
+
+    while(SQLITE_ROW == sqlite3_step(stmt)){
+        neventos++;
+    }
+    
+    // Finalizar y cerrar la base de datos
+    sqlite3_finalize(stmt);
+    sqlite3_close(db);
+
+    return neventos;
+}
+
 int nguatDB = 0;
 int nevenDB = 0;
 
@@ -182,7 +211,6 @@ Evento* get_eventos(){
 Guateque* get_guateques() {
     sqlite3 *db;
     sqlite3_stmt *stmt;
-    int neventos = contar_eventos();
     if (sqlite3_open(GUATEQUEDB, &db) != SQLITE_OK) {
         printf("Error al abrir la base de datos: %s\n", sqlite3_errmsg(db));
         return NULL;
@@ -209,6 +237,8 @@ Guateque* get_guateques() {
         int ultevento = 0;
         nguatDB++;
         guateques[i].id = sqlite3_column_int(stmt, 0); 
+
+        int neventos = contar_eventos_por_guateque(guateques[i].id);
 
         char* nombre = (char *) sqlite3_column_text(stmt, 1);
         guateques[i].nombre = malloc(strlen(nombre)+1);
