@@ -75,7 +75,7 @@ int main(void){
             case 0:
                 break;
             case 1:
-                imprimirGuateques(guateque, contar_guateques());
+                imprimirGuateques(guateque);
                 scanf("%d", &opcion);
                 imprimirEventos(guateque[opcion-1]);
                 break;
@@ -87,7 +87,7 @@ int main(void){
                 printf("Introduce la direccion:\n");
                 nuevoguateque.direccion = malloc(sizeof(char)*100);
                 scanf("%s", nuevoguateque.direccion);
-                nuevoguateque.id = obtenerIdGuateque();
+                nuevoguateque.id = contar_guateques();
                 insertar_guateque(nuevoguateque);
                 printf("Se ha guardado el guateque:\n");
                 free(nuevoguateque.nombre);
@@ -106,9 +106,9 @@ int main(void){
                 printf("Introduce una breve descripcion:\n");
                 evento.descripcion = malloc(sizeof(char)*100);
                 scanf("%s", evento.descripcion);
-                evento.id = obtenerIdEvento();
+                evento.id = contar_eventos();
                 printf("En cual de estos guateques va a tener lugar?\n");
-                imprimirGuateques(guateque, contar_guateques());
+                imprimirGuateques(guateque);
                 int id;
                 scanf("%d", &id);
                 evento.idg = guateque[id-1].id;
@@ -119,8 +119,18 @@ int main(void){
                 free(evento.fecha);
                 free(evento.descripcion);
                 break;
+            case 4:
+                printf("En que guateque esta el evento que quieres eliminar?\n");
+                imprimirGuateques(guateque);
+                scanf("%d", &opcion);
+                printf("Que evento quieres eliminar?\n");
+                scanf("%d", &opcion);
+                imprimirEventos(guateque[opcion-1]);
+                eliminar_evento(guateque[opcion-1].eventos[opcion-1]);
+                printf("Eliminado\n");
+                break;
             default:
-                printf("No es una opcion valida");
+                printf("No es una opcion valida\n");
         }
     }
     

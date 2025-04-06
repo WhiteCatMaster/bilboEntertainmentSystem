@@ -132,18 +132,15 @@ int contar_eventos_por_guateque(int id){
         return 0;
     }
 
-    char *select = "SELECT * FROM EVENTO WHERE ID_G == ?;";
-    sqlite3_bind_int(stmt, 1, id);
+    char *select = "SELECT * FROM EVENTO WHERE ID_G=?;";
     if (sqlite3_prepare_v2(db, select, -1, &stmt, NULL) != SQLITE_OK) {
         printf("Error al preparar la declaración SQL: %s\n", sqlite3_errmsg(db));
         sqlite3_close(db);
         return 0;
     }
-    
+    sqlite3_bind_int(stmt,1, id);
 
-    while(SQLITE_ROW == sqlite3_step(stmt)){
-        neventos++;
-    }
+    while (sqlite3_step(stmt) != SQLITE_DONE) { neventos++; }
     
     // Finalizar y cerrar la base de datos
     sqlite3_finalize(stmt);
@@ -197,7 +194,6 @@ Evento* get_eventos(){
         eventos[i].idg = sqlite3_column_int(stmt, 5);
     }
     
-
     // Finalizar y cerrar la base de datos
     sqlite3_finalize(stmt);
     sqlite3_close(db);
@@ -234,7 +230,6 @@ Guateque* get_guateques() {
         int ultevento = 0;
         int id = sqlite3_column_int(stmt, 0);
         guateques[i].id = id; 
-
         int neventos = contar_eventos_por_guateque(id);
 
         char* nombre = (char *) sqlite3_column_text(stmt, 1);
@@ -312,4 +307,30 @@ int obtenerIdEvento(){
     sqlite3_finalize(stmt);
     sqlite3_close(db);
     return max + 1;
+}
+
+int eliminar_evento(Evento e){
+    sqlite3 *db;
+    sqlite3_stmt *stmt;
+    if (sqlite3_open(GUATEQUEDB, &db) != SQLITE_OK) {
+        printf("Error al abrir la base de datos: %s\n", sqlite3_errmsg(db));
+        return 1;
+    }
+
+    char *insert = "DELETE FROM EVENTO WHERE ID_E = ?;";
+    if (sqlite3_prepare_v2(db, insert, -1, &stmt, NULL) != SQLITE_OK) {
+        printf("Error al preparar la declaración SQL: %s\n", sqlite3_errmsg(db));
+        sqlite3_close(db);
+        return 1;
+    }
+    sqlite3_bind_int(stmt, 1, e.id);
+
+    int result = sqlite3_step(stmt);
+    if (result != SQLITE_DONE) {
+        printf("Error al eliminar el evento %s\n", e.nombre);
+        return 1;
+    } else {
+        printf("Evento eliminado correctamente\n");
+        return 0;
+    }
 }

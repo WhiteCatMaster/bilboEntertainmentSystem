@@ -8,3 +8,4 @@ int contar_guateques();
 int obtenerIdGuateque();
 int obtenerIdEvento();
 int contar_eventos_por_guateque(int id);
+int eliminar_evento(Evento e);

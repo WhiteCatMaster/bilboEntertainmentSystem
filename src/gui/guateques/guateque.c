@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include "guateque.h"
+#include "guatequeDB.h"
 
 void imprimirEventos(Guateque g){
     printf("Nombre: %s, Direccion: %s\n", g.nombre, g.direccion);
@@ -14,10 +15,10 @@ void imprimirEventos(Guateque g){
     }
 }
 
-void imprimirGuateques(Guateque *g, int numero){
+void imprimirGuateques(Guateque *g){
     printf("Seleciona un guateque: \n");
     printf("    0)Exit\n");
-    for (int i = 0; i < numero; i++)
+    for (int i = 0; i < contar_guateques(); i++)
     {
         Guateque guateque = g[i];
         printf("    %d)%s\n", i+1, guateque.nombre);

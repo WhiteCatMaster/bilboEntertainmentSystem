@@ -18,4 +18,4 @@ typedef struct
 } Guateque;
 
 void imprimirEventos(Guateque g);
-void imprimirGuateques(Guateque *g, int numero);
+void imprimirGuateques(Guateque *g);
