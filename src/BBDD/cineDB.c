@@ -5,7 +5,7 @@
 #include "cineDB.h"
 
 
-const char *CINEBD = "src\\BBDD\\cine.db"; // Ruta de la base de datos
+const char *CINEBD = "src\\BBDD\\bes.db"; // Ruta de la base de datos
 // Estructura para almacenar una película
 
 
@@ -325,14 +325,14 @@ int insert_libro(Libro *l){
     sqlite3_bind_text(stmt, 2, l->descripcion, strlen(l->descripcion), SQLITE_STATIC);
     sqlite3_bind_double(stmt, 3, l->precioCo);
     sqlite3_bind_double(stmt, 4, l->precioAl);
-    aqlite3_bind_text(stmt, 5, l->genero, strlen(l->genero), SQLITE_STATIC);
+    sqlite3_bind_text(stmt, 5, l->genero, strlen(l->genero), SQLITE_STATIC);
 
     int result = sqlite3_step(stmt);
     if (result != SQLITE_DONE) {
         printf("Error al insertar la pelicula\n");
         return 1;
     } else {
-        printf("Pelicula insertada correctamente\n");
+        //printf("Pelicula insertada correctamente\n");
         return 0;
     }
 
@@ -343,11 +343,16 @@ int insert_libro(Libro *l){
 Libro* show_libro() {
     sqlite3 *db;
     sqlite3_stmt *stmt;
+    int cantidad = count_libros();
+    if (cantidad <= 0) {
+        printf("No hay libros en la base de datos.\n");
+        return NULL;
+    }
+
     if (sqlite3_open(CINEBD, &db) != SQLITE_OK) {
         printf("Error al abrir la base de datos: %s\n", sqlite3_errmsg(db));
         return NULL;
     }
-    // printf("Base de datos abierta\n");
 
     char *selectL = "SELECT * FROM LIBRO";
     if (sqlite3_prepare_v2(db, selectL, -1, &stmt, NULL) != SQLITE_OK) {
@@ -356,16 +361,181 @@ Libro* show_libro() {
         return NULL;
     }
 
-    Libro *libros = (Pelicula *)malloc(100 * sizeof(Pelicula));
+    Libro *libros = (Libro *)malloc(cantidad * sizeof(Libro));
     if (libros == NULL) {
-        printf("Error al asignar memoria para las películas\n");
+        printf("Error al asignar memoria para los libros\n");
         sqlite3_finalize(stmt);
         sqlite3_close(db);
         return NULL;
     }
 
     int r = 0;
-    printf("===================================\n");
+    while (sqlite3_step(stmt) == SQLITE_ROW) {
+        const unsigned char *nombre = sqlite3_column_text(stmt, 0);
+        libros[r].nombre = malloc(strlen((const char *)nombre) + 1);
+        strcpy(libros[r].nombre, (const char *)nombre);
+
+        const unsigned char *descripcion = sqlite3_column_text(stmt, 1);
+        libros[r].descripcion = malloc(strlen((const char *)descripcion) + 1);
+        strcpy(libros[r].descripcion, (const char *)descripcion);
+
+        libros[r].precioAl = sqlite3_column_double(stmt, 2);
+        libros[r].precioCo = sqlite3_column_double(stmt, 3);
+
+        const unsigned char *genero = sqlite3_column_text(stmt, 4);
+        libros[r].genero = malloc(strlen((const char *)genero) + 1);
+        strcpy(libros[r].genero, (const char *)genero);
+
+        r++;
+    }
+
+    sqlite3_finalize(stmt);
+    sqlite3_close(db);
+
+    return libros;
+}
+
+//contar cuantos libros hay
+int count_libros() {
+    sqlite3 *db;
+    sqlite3_stmt *stmt;
+    int count = 0;
+
+    if (sqlite3_open(CINEBD, &db) != SQLITE_OK) {
+        printf("Error al abrir la base de datos: %s\n", sqlite3_errmsg(db));
+        return 0;
+    }
+
+    const char *countQuery = "SELECT COUNT(*) FROM LIBRO";
+    if (sqlite3_prepare_v2(db, countQuery, -1, &stmt, NULL) != SQLITE_OK) {
+        printf("Error al preparar la declaración COUNT: %s\n", sqlite3_errmsg(db));
+        sqlite3_close(db);
+        return 0;
+    }
+
+    if (sqlite3_step(stmt) == SQLITE_ROW) {
+        count = sqlite3_column_int(stmt, 0);
+    }
+
+    sqlite3_finalize(stmt);
+    sqlite3_close(db);
+    //printf("LA CUENTA: %d", count);
+    return count;
+}
+
+// eliminar libro
+int delete_libro(Libro *l){
+    sqlite3 *db;
+    sqlite3_stmt *stmt;
+    if (sqlite3_open(CINEBD, &db) != SQLITE_OK) {
+        printf("Error al abrir la base de datos: %s\n", sqlite3_errmsg(db));
+        return 1;
+    }
+
+    char *deleteL = "DELETE FROM LIBRO WHERE NOMBRE = ?";
+    if (sqlite3_prepare_v2(db, deleteL, -1, &stmt, NULL) != SQLITE_OK) {
+        printf("Error al preparar la declaración SQL: %s\n", sqlite3_errmsg(db));
+        sqlite3_close(db);
+        return 1;
+    }
+
+    sqlite3_bind_text(stmt, 1, l->nombre, strlen(l->nombre), SQLITE_STATIC);
+
+    int result = sqlite3_step(stmt);
+    if (result != SQLITE_DONE) {
+        printf("Error al borrar el libro\n");
+        return 1;
+    } else {
+        //printf("Libro borrado correctamente\n");
+        return 0;
+    }
+}
+// borrar base de datos de libro
+int borrarbdLibro(){
+    sqlite3 *db;
+    sqlite3_stmt *stmt;
+    if (sqlite3_open(CINEBD, &db) != SQLITE_OK) {
+        printf("Error al abrir la base de datos: %s\n", sqlite3_errmsg(db));
+        return 1;
+    }
+
+    char *deleteL = "DELETE FROM LIBRO";
+    if (sqlite3_prepare_v2(db, deleteL, -1, &stmt, NULL) != SQLITE_OK) {
+        printf("Error al preparar la declaración SQL: %s\n", sqlite3_errmsg(db));
+        sqlite3_close(db);
+        return 1;
+    }
+
+    int result = sqlite3_step(stmt);
+    if (result != SQLITE_DONE) {
+        printf("Error al borrar la tabla\n");
+        return 1;
+    } else {
+        //printf("Tabla borrada correctamente\n");
+        return 0;
+    }
+}
+
+// insertar libro en el inventario
+int insert_inventario(Libro *l, int dia, int mes, int ano){
+    sqlite3 *db;
+    sqlite3_stmt *stmt;
+    if (sqlite3_open(CINEBD, &db) != SQLITE_OK) {
+        printf("Error al abrir la base de datos: %s\n", sqlite3_errmsg(db));
+        return 1;
+    }
+    char *insertL = "INSERT INTO INVENTARIO(NOMBRE, DESCRIPCION, PCO, PAL, GENERO, DIA, MES, ANO) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+    if (sqlite3_prepare_v2(db, insertL, -1, &stmt, NULL) != SQLITE_OK) {
+        printf("Error al preparar la declaración SQL: %s\n", sqlite3_errmsg(db));
+        sqlite3_close(db);
+        return 1;
+    }
+    sqlite3_bind_text(stmt, 1, l->nombre, strlen(l->nombre), SQLITE_STATIC);
+    sqlite3_bind_text(stmt, 2, l->descripcion, strlen(l->descripcion), SQLITE_STATIC);
+    sqlite3_bind_double(stmt, 3, l->precioCo);
+    sqlite3_bind_double(stmt, 4, l->precioAl);
+    sqlite3_bind_text(stmt, 5, l->genero, strlen(l->genero), SQLITE_STATIC);
+    sqlite3_bind_int(stmt, 6, dia);
+    sqlite3_bind_int(stmt, 7, mes);
+    sqlite3_bind_int(stmt, 8, ano);
+
+    int result = sqlite3_step(stmt);
+    if (result != SQLITE_DONE) {
+        printf("Error al insertar la libro\n");
+        return 1;
+    } else {
+        //printf("libro insertado correctamente\n");
+        return 0;
+    }
+
+}
+
+Libro* show_inventario() {
+    sqlite3 *db;
+    sqlite3_stmt *stmt;
+    if (sqlite3_open(CINEBD, &db) != SQLITE_OK) {
+        printf("Error al abrir la base de datos: %s\n", sqlite3_errmsg(db));
+        return NULL;
+    }
+    // printf("Base de datos abierta\n");
+
+    char *selectL = "SELECT * FROM INVENTARIO";
+    if (sqlite3_prepare_v2(db, selectL, -1, &stmt, NULL) != SQLITE_OK) {
+        printf("Error al preparar la declaración SQL: %s\n", sqlite3_errmsg(db));
+        sqlite3_close(db);
+        return NULL;
+    }
+
+    Libro *libros = (Libro *)malloc(100 * sizeof(Libro));
+    if (libros == NULL) {
+        printf("Error al asignar memoria para los libros\n");
+        sqlite3_finalize(stmt);
+        sqlite3_close(db);
+        return NULL;
+    }
+
+    int r = 0;
+    //printf("===================================\n");
     while (sqlite3_step(stmt) == SQLITE_ROW) {
         // Asignar memoria dinámica para cada campo
         const unsigned char *nombre = sqlite3_column_text(stmt, 0);
@@ -396,7 +566,7 @@ Libro* show_libro() {
             break;
         }
         strcpy(libros[r].genero, (const char *)genero);
-        
+
         r++;
     }
 
@@ -406,9 +576,8 @@ Libro* show_libro() {
 
     return libros;
 }
-
-// eliminar libro
-int delete_libro(Libro *l){
+// eliminar libro del inventario
+int delete_libroInventario(Libro *l){
     sqlite3 *db;
     sqlite3_stmt *stmt;
     if (sqlite3_open(CINEBD, &db) != SQLITE_OK) {
@@ -416,7 +585,7 @@ int delete_libro(Libro *l){
         return 1;
     }
 
-    char *deleteL = "DELETE FROM LIBRO WHERE NOMBRE = ?";
+    char *deleteL = "DELETE FROM INVENTARIO WHERE NOMBRE = ?";
     if (sqlite3_prepare_v2(db, deleteL, -1, &stmt, NULL) != SQLITE_OK) {
         printf("Error al preparar la declaración SQL: %s\n", sqlite3_errmsg(db));
         sqlite3_close(db);
@@ -430,7 +599,348 @@ int delete_libro(Libro *l){
         printf("Error al borrar el libro\n");
         return 1;
     } else {
-        printf("Libro borrado correctamente\n");
+        //printf("Libro borrado correctamente\n");
+        return 0;
+    }
+}
+int borrarbdInventario(){
+    sqlite3 *db;
+    sqlite3_stmt *stmt;
+    if (sqlite3_open(CINEBD, &db) != SQLITE_OK) {
+        printf("Error al abrir la base de datos: %s\n", sqlite3_errmsg(db));
+        return 1;
+    }
+
+    char *deleteL = "DELETE FROM INVENTARIO";
+    if (sqlite3_prepare_v2(db, deleteL, -1, &stmt, NULL) != SQLITE_OK) {
+        printf("Error al preparar la declaración SQL: %s\n", sqlite3_errmsg(db));
+        sqlite3_close(db);
+        return 1;
+    }
+
+    int result = sqlite3_step(stmt);
+    if (result != SQLITE_DONE) {
+        printf("Error al borrar la tabla\n");
+        return 1;
+    } else {
+        printf("Tabla borrada correctamente\n");
+        return 0;
+    }
+}
+
+int getdiaInventarioPorNombre(const char *nombreLibro) {
+    sqlite3 *db;
+    sqlite3_stmt *stmt;
+    int dia = -1;  // Usamos -1 para indicar que no se encontró
+
+    if (sqlite3_open(CINEBD, &db) != SQLITE_OK) {
+        printf("Error al abrir la base de datos: %s\n", sqlite3_errmsg(db));
+        return -1;
+    }
+
+    const char *query = "SELECT DIA FROM INVENTARIO WHERE NOMBRE = ?";
+    if (sqlite3_prepare_v2(db, query, -1, &stmt, NULL) != SQLITE_OK) {
+        printf("Error al preparar la declaración SQL: %s\n", sqlite3_errmsg(db));
+        sqlite3_close(db);
+        return -1;
+    }
+
+    // Vincula el nombre al parámetro SQL
+    if (sqlite3_bind_text(stmt, 1, nombreLibro, -1, SQLITE_STATIC) != SQLITE_OK) {
+        printf("Error al vincular el parámetro: %s\n", sqlite3_errmsg(db));
+        sqlite3_finalize(stmt);
+        sqlite3_close(db);
+        return -1;
+    }
+
+    // Ejecutar y obtener el resultado
+    if (sqlite3_step(stmt) == SQLITE_ROW) {
+        dia = sqlite3_column_int(stmt, 0);
+        //printf("Día para '%s': %d\n", nombreLibro, dia);
+    } else {
+        printf("No se encontro el libro con nombre: %s\n", nombreLibro);
+    }
+
+    sqlite3_finalize(stmt);
+    sqlite3_close(db);
+
+
+    //printf("DIA: %d\n", dia);
+    return dia;
+}
+
+int getmesInventarioPorNombre(const char *nombreLibro) {
+    sqlite3 *db;
+    sqlite3_stmt *stmt;
+    int mes = -1;
+
+    if (sqlite3_open(CINEBD, &db) != SQLITE_OK) {
+        printf("Error al abrir la base de datos: %s\n", sqlite3_errmsg(db));
+        return -1;
+    }
+
+    const char *query = "SELECT MES FROM INVENTARIO WHERE NOMBRE = ?";
+    if (sqlite3_prepare_v2(db, query, -1, &stmt, NULL) != SQLITE_OK) {
+        printf("Error al preparar la declaración SQL: %s\n", sqlite3_errmsg(db));
+        sqlite3_close(db);
+        return -1;
+    }
+
+    if (sqlite3_bind_text(stmt, 1, nombreLibro, -1, SQLITE_STATIC) != SQLITE_OK) {
+        printf("Error al vincular el parámetro: %s\n", sqlite3_errmsg(db));
+        sqlite3_finalize(stmt);
+        sqlite3_close(db);
+        return -1;
+    }
+
+    if (sqlite3_step(stmt) == SQLITE_ROW) {
+        mes = sqlite3_column_int(stmt, 0);
+    } else {
+        printf("No se encontro el libro con nombre: %s\n", nombreLibro);
+    }
+
+    sqlite3_finalize(stmt);
+    sqlite3_close(db);
+    return mes;
+}
+
+int getanoInventarioPorNombre(const char *nombreLibro) {
+    sqlite3 *db;
+    sqlite3_stmt *stmt;
+    int ano = -1;
+
+    if (sqlite3_open(CINEBD, &db) != SQLITE_OK) {
+        printf("Error al abrir la base de datos: %s\n", sqlite3_errmsg(db));
+        return -1;
+    }
+
+    const char *query = "SELECT ANO FROM INVENTARIO WHERE NOMBRE = ?";
+    if (sqlite3_prepare_v2(db, query, -1, &stmt, NULL) != SQLITE_OK) {
+        printf("Error al preparar la declaración SQL: %s\n", sqlite3_errmsg(db));
+        sqlite3_close(db);
+        return -1;
+    }
+
+    if (sqlite3_bind_text(stmt, 1, nombreLibro, -1, SQLITE_STATIC) != SQLITE_OK) {
+        printf("Error al vincular el parámetro: %s\n", sqlite3_errmsg(db));
+        sqlite3_finalize(stmt);
+        sqlite3_close(db);
+        return -1;
+    }
+
+    if (sqlite3_step(stmt) == SQLITE_ROW) {
+        ano = sqlite3_column_int(stmt, 0);
+    } else {
+        printf("No se encontro el libro con nombre: %s\n", nombreLibro);
+    }
+
+    sqlite3_finalize(stmt);
+    sqlite3_close(db);
+    return ano;
+}
+
+int count_inventario() {
+    sqlite3 *db;
+    sqlite3_stmt *stmt;
+    int count = 0;
+
+    if (sqlite3_open(CINEBD, &db) != SQLITE_OK) {
+        printf("Error al abrir la base de datos: %s\n", sqlite3_errmsg(db));
+        return 0;
+    }
+
+    const char *countQuery = "SELECT COUNT(*) FROM INVENTARIO";
+    if (sqlite3_prepare_v2(db, countQuery, -1, &stmt, NULL) != SQLITE_OK) {
+        printf("Error al preparar la declaración COUNT: %s\n", sqlite3_errmsg(db));
+        sqlite3_close(db);
+        return 0;
+    }
+
+    if (sqlite3_step(stmt) == SQLITE_ROW) {
+        count = sqlite3_column_int(stmt, 0);
+    }
+
+    sqlite3_finalize(stmt);
+    sqlite3_close(db);
+
+    return count;
+}
+
+int insert_tarjeta(Tarjeta t){
+    sqlite3 *db;
+    sqlite3_stmt *stmt;
+    if (sqlite3_open(CINEBD, &db) != SQLITE_OK) {
+        printf("Error al abrir la base de datos: %s\n", sqlite3_errmsg(db));
+        return 1;
+    }
+
+    char *insertT = "INSERT INTO TARJETA(NUMERO, CVV, SALDO) VALUES (?, ?, ?)";
+    if (sqlite3_prepare_v2(db, insertT, -1, &stmt, NULL) != SQLITE_OK) {
+        printf("Error al preparar la declaración SQL: %s\n", sqlite3_errmsg(db));
+        sqlite3_close(db);
+        return 1;
+    }
+    sqlite3_bind_text(stmt, 1, t.numero, strlen(t.numero), SQLITE_STATIC);
+    sqlite3_bind_int(stmt, 2, t.CVV);
+    sqlite3_bind_double(stmt, 3, t.saldo);
+    int result = sqlite3_step(stmt);
+    if (result != SQLITE_DONE) {
+        printf("Error al insertar la tarjeta\n");
+        return 1;
+    } else {
+        printf("Tarjeta insertada correctamente\n");
+        return 0;
+    }
+    sqlite3_finalize(stmt);
+}
+
+int count_tarjetas() {
+    sqlite3 *db;
+    sqlite3_stmt *stmt;
+    int count = 0;
+
+    if (sqlite3_open(CINEBD, &db) != SQLITE_OK) {
+        printf("Error al abrir la base de datos: %s\n", sqlite3_errmsg(db));
+        return 0;
+    }
+
+    const char *countQuery = "SELECT COUNT(*) FROM TARJETA";
+    if (sqlite3_prepare_v2(db, countQuery, -1, &stmt, NULL) != SQLITE_OK) {
+        printf("Error al preparar la declaración COUNT: %s\n", sqlite3_errmsg(db));
+        sqlite3_close(db);
+        return 0;
+    }
+
+    if (sqlite3_step(stmt) == SQLITE_ROW) {
+        count = sqlite3_column_int(stmt, 0);
+    }
+
+    sqlite3_finalize(stmt);
+    sqlite3_close(db);
+    return count;
+}
+
+// enseñar tarjetas
+Tarjeta* show_tarjeta() {
+    sqlite3 *db;
+    sqlite3_stmt *stmt;
+    if (sqlite3_open(CINEBD, &db) != SQLITE_OK) {
+        printf("Error al abrir la base de datos: %s\n", sqlite3_errmsg(db));
+        return NULL;
+    }
+    // printf("Base de datos abierta\n");
+
+    char *selectT = "SELECT * FROM TARJETA";
+    if (sqlite3_prepare_v2(db, selectT, -1, &stmt, NULL) != SQLITE_OK) {
+        printf("Error al preparar la declaración SQL: %s\n", sqlite3_errmsg(db));
+        sqlite3_close(db);
+        return NULL;
+    }
+
+    Tarjeta *tarjetas = (Tarjeta *)malloc(100 * sizeof(Tarjeta));
+    if (tarjetas == NULL) {
+        printf("Error al asignar memoria para las tarjetas\n");
+        sqlite3_finalize(stmt);
+        sqlite3_close(db);
+        return NULL;
+    }
+
+    int r = 0;
+    //printf("===================================\n");
+    while (sqlite3_step(stmt) == SQLITE_ROW) {
+        // Asignar memoria dinámica para cada campo
+        const unsigned char *numero = sqlite3_column_text(stmt, 0);
+        strcpy(tarjetas[r].numero, (const char *)numero);
+
+        tarjetas[r].CVV = sqlite3_column_int(stmt, 1);
+        tarjetas[r].saldo = sqlite3_column_double(stmt, 2);
+        
+        r++;
+    }
+
+    // Finalizar y cerrar la base de datos
+    sqlite3_finalize(stmt);
+    sqlite3_close(db);
+
+    return tarjetas;
+}
+// eliminar tarjeta
+int delete_tarjeta(Tarjeta t){
+    sqlite3 *db;
+    sqlite3_stmt *stmt;
+    if (sqlite3_open(CINEBD, &db) != SQLITE_OK) {
+        printf("Error al abrir la base de datos: %s\n", sqlite3_errmsg(db));
+        return 1;
+    }
+
+    char *deleteT = "DELETE FROM TARJETA WHERE NUMERO = ?";
+    if (sqlite3_prepare_v2(db, deleteT, -1, &stmt, NULL) != SQLITE_OK) {
+        printf("Error al preparar la declaración SQL: %s\n", sqlite3_errmsg(db));
+        sqlite3_close(db);
+        return 1;
+    }
+
+    sqlite3_bind_text(stmt, 1, t.numero, strlen(t.numero), SQLITE_STATIC);
+
+    int result = sqlite3_step(stmt);
+    if (result != SQLITE_DONE) {
+        printf("Error al borrar la tarjeta\n");
+        return 1;
+    } else {
+        printf("Tarjeta borrada correctamente\n");
+        return 0;
+    }
+}
+// borrar base de datos de tarjeta
+int borrarbdTarjeta(){
+    sqlite3 *db;
+    sqlite3_stmt *stmt;
+    if (sqlite3_open(CINEBD, &db) != SQLITE_OK) {
+        printf("Error al abrir la base de datos: %s\n", sqlite3_errmsg(db));
+        return 1;
+    }
+
+    char *deleteT = "DELETE FROM TARJETA";
+    if (sqlite3_prepare_v2(db, deleteT, -1, &stmt, NULL) != SQLITE_OK) {
+        printf("Error al preparar la declaración SQL: %s\n", sqlite3_errmsg(db));
+        sqlite3_close(db);
+        return 1;
+    }
+
+    int result = sqlite3_step(stmt);
+    if (result != SQLITE_DONE) {
+        printf("Error al borrar la tabla\n");
+        return 1;
+    } else {
+        printf("Tabla borrada correctamente\n");
+        return 0;
+    }
+}
+//actualizar saldo tarjeta
+int update_saldo(Tarjeta t, double saldo){
+    sqlite3 *db;
+    sqlite3_stmt *stmt;
+    if (sqlite3_open(CINEBD, &db) != SQLITE_OK) {
+        printf("Error al abrir la base de datos: %s\n", sqlite3_errmsg(db));
+        return 1;
+    }
+
+    char *updateT = "UPDATE TARJETA SET SALDO = ? WHERE NUMERO = ?";
+    if (sqlite3_prepare_v2(db, updateT, -1, &stmt, NULL) != SQLITE_OK) {
+        printf("Error al preparar la declaración SQL: %s\n", sqlite3_errmsg(db));
+        sqlite3_close(db);
+        return 1;
+    }
+
+    sqlite3_bind_double(stmt, 1, saldo);
+    sqlite3_bind_text(stmt, 2, t.numero, strlen(t.numero), SQLITE_STATIC);
+
+    int result = sqlite3_step(stmt);
+    if (result != SQLITE_DONE) {
+        printf("Error al actualizar el saldo\n");
+        return 1;
+    } else {
+        //printf("Saldo actualizado correctamente\n");
         return 0;
     }
 }
