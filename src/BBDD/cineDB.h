@@ -48,21 +48,20 @@ int insert_libro(Libro *l);
 Libro* show_libro(void);
 int delete_libro(Libro *l);
 int borrarbdLibro();
-<<<<<<< HEAD
 int insert_inventario(Libro *l, int dia, int mes, int ano);
 Libro* show_inventario(void);
 int delete_libroInventario(Libro *l);
 int borrarbdInventario();
-int getdiaInventario();
-int getmesInventario();
-int getanoInventario();
 int insert_tarjeta(Tarjeta t);
 Tarjeta* show_tarjeta(void);
 int delete_tarjeta(Tarjeta t);
 int borrarbdTarjeta();
 int update_saldo(Tarjeta t, double saldo);
-
-=======
+int count_tarjetas();
 int count_libros();
->>>>>>> 08dedffa116b2e85c53a6de114ef88d7bdf8986b
+int count_inventario();
+int getdiaInventarioPorNombre(const char *nombreLibro);
+int getmesInventarioPorNombre(const char *nombreLibro);
+int getanoInventarioPorNombre(const char *nombreLibro);
+
 #endif // CINE_DB_H

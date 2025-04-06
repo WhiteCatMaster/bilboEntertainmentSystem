@@ -446,7 +446,7 @@ int delete_libro(Libro *l){
         printf("Error al borrar el libro\n");
         return 1;
     } else {
-        printf("Libro borrado correctamente\n");
+        //printf("Libro borrado correctamente\n");
         return 0;
     }
 }
@@ -484,7 +484,7 @@ int insert_inventario(Libro *l, int dia, int mes, int ano){
         printf("Error al abrir la base de datos: %s\n", sqlite3_errmsg(db));
         return 1;
     }
-    char *insertL = "INSERT INTO LIBRO(NOMBRE, DESCRIPCION, PCO, PAL, GENERO, DIA, MES, ANO) VALUES (?, ?, ?, ?, ?, ?, ?, ?))";
+    char *insertL = "INSERT INTO INVENTARIO(NOMBRE, DESCRIPCION, PCO, PAL, GENERO, DIA, MES, ANO) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
     if (sqlite3_prepare_v2(db, insertL, -1, &stmt, NULL) != SQLITE_OK) {
         printf("Error al preparar la declaración SQL: %s\n", sqlite3_errmsg(db));
         sqlite3_close(db);
@@ -504,7 +504,7 @@ int insert_inventario(Libro *l, int dia, int mes, int ano){
         printf("Error al insertar la libro\n");
         return 1;
     } else {
-        printf("libro insertado correctamente\n");
+        //printf("libro insertado correctamente\n");
         return 0;
     }
 
@@ -535,7 +535,7 @@ Libro* show_inventario() {
     }
 
     int r = 0;
-    printf("===================================\n");
+    //printf("===================================\n");
     while (sqlite3_step(stmt) == SQLITE_ROW) {
         // Asignar memoria dinámica para cada campo
         const unsigned char *nombre = sqlite3_column_text(stmt, 0);
@@ -599,7 +599,7 @@ int delete_libroInventario(Libro *l){
         printf("Error al borrar el libro\n");
         return 1;
     } else {
-        printf("Libro borrado correctamente\n");
+        //printf("Libro borrado correctamente\n");
         return 0;
     }
 }
@@ -627,69 +627,145 @@ int borrarbdInventario(){
         return 0;
     }
 }
-int getdiaInventario(){
+
+int getdiaInventarioPorNombre(const char *nombreLibro) {
     sqlite3 *db;
     sqlite3_stmt *stmt;
+    int dia = -1;  // Usamos -1 para indicar que no se encontró
+
     if (sqlite3_open(CINEBD, &db) != SQLITE_OK) {
         printf("Error al abrir la base de datos: %s\n", sqlite3_errmsg(db));
-        return 1;
+        return -1;
     }
 
-    char *selectL = "SELECT DIA FROM INVENTARIO";
-    if (sqlite3_prepare_v2(db, selectL, -1, &stmt, NULL) != SQLITE_OK) {
+    const char *query = "SELECT DIA FROM INVENTARIO WHERE NOMBRE = ?";
+    if (sqlite3_prepare_v2(db, query, -1, &stmt, NULL) != SQLITE_OK) {
         printf("Error al preparar la declaración SQL: %s\n", sqlite3_errmsg(db));
         sqlite3_close(db);
-        return 1;
+        return -1;
     }
 
-    int dia = 0;
-    while (sqlite3_step(stmt) == SQLITE_ROW) {
-        dia = sqlite3_column_int(stmt, 0);
+    // Vincula el nombre al parámetro SQL
+    if (sqlite3_bind_text(stmt, 1, nombreLibro, -1, SQLITE_STATIC) != SQLITE_OK) {
+        printf("Error al vincular el parámetro: %s\n", sqlite3_errmsg(db));
+        sqlite3_finalize(stmt);
+        sqlite3_close(db);
+        return -1;
     }
+
+    // Ejecutar y obtener el resultado
+    if (sqlite3_step(stmt) == SQLITE_ROW) {
+        dia = sqlite3_column_int(stmt, 0);
+        //printf("Día para '%s': %d\n", nombreLibro, dia);
+    } else {
+        printf("No se encontro el libro con nombre: %s\n", nombreLibro);
+    }
+
+    sqlite3_finalize(stmt);
+    sqlite3_close(db);
+
+
+    //printf("DIA: %d\n", dia);
     return dia;
 }
-int getmesInventario(){
+
+int getmesInventarioPorNombre(const char *nombreLibro) {
     sqlite3 *db;
     sqlite3_stmt *stmt;
+    int mes = -1;
+
     if (sqlite3_open(CINEBD, &db) != SQLITE_OK) {
         printf("Error al abrir la base de datos: %s\n", sqlite3_errmsg(db));
-        return 1;
+        return -1;
     }
 
-    char *selectL = "SELECT MES FROM INVENTARIO";
-    if (sqlite3_prepare_v2(db, selectL, -1, &stmt, NULL) != SQLITE_OK) {
+    const char *query = "SELECT MES FROM INVENTARIO WHERE NOMBRE = ?";
+    if (sqlite3_prepare_v2(db, query, -1, &stmt, NULL) != SQLITE_OK) {
         printf("Error al preparar la declaración SQL: %s\n", sqlite3_errmsg(db));
         sqlite3_close(db);
-        return 1;
+        return -1;
     }
 
-    int mes = 0;
-    while (sqlite3_step(stmt) == SQLITE_ROW) {
-        mes = sqlite3_column_int(stmt, 0);
+    if (sqlite3_bind_text(stmt, 1, nombreLibro, -1, SQLITE_STATIC) != SQLITE_OK) {
+        printf("Error al vincular el parámetro: %s\n", sqlite3_errmsg(db));
+        sqlite3_finalize(stmt);
+        sqlite3_close(db);
+        return -1;
     }
+
+    if (sqlite3_step(stmt) == SQLITE_ROW) {
+        mes = sqlite3_column_int(stmt, 0);
+    } else {
+        printf("No se encontro el libro con nombre: %s\n", nombreLibro);
+    }
+
+    sqlite3_finalize(stmt);
+    sqlite3_close(db);
     return mes;
 }
-int getanoInventario(){
+
+int getanoInventarioPorNombre(const char *nombreLibro) {
     sqlite3 *db;
     sqlite3_stmt *stmt;
+    int ano = -1;
+
     if (sqlite3_open(CINEBD, &db) != SQLITE_OK) {
         printf("Error al abrir la base de datos: %s\n", sqlite3_errmsg(db));
-        return 1;
+        return -1;
     }
 
-    char *selectL = "SELECT ANO FROM INVENTARIO";
-    if (sqlite3_prepare_v2(db, selectL, -1, &stmt, NULL) != SQLITE_OK) {
+    const char *query = "SELECT ANO FROM INVENTARIO WHERE NOMBRE = ?";
+    if (sqlite3_prepare_v2(db, query, -1, &stmt, NULL) != SQLITE_OK) {
         printf("Error al preparar la declaración SQL: %s\n", sqlite3_errmsg(db));
         sqlite3_close(db);
-        return 1;
+        return -1;
     }
 
-    int ano = 0;
-    while (sqlite3_step(stmt) == SQLITE_ROW) {
-        ano = sqlite3_column_int(stmt, 0);
+    if (sqlite3_bind_text(stmt, 1, nombreLibro, -1, SQLITE_STATIC) != SQLITE_OK) {
+        printf("Error al vincular el parámetro: %s\n", sqlite3_errmsg(db));
+        sqlite3_finalize(stmt);
+        sqlite3_close(db);
+        return -1;
     }
+
+    if (sqlite3_step(stmt) == SQLITE_ROW) {
+        ano = sqlite3_column_int(stmt, 0);
+    } else {
+        printf("No se encontro el libro con nombre: %s\n", nombreLibro);
+    }
+
+    sqlite3_finalize(stmt);
+    sqlite3_close(db);
     return ano;
 }
+
+int count_inventario() {
+    sqlite3 *db;
+    sqlite3_stmt *stmt;
+    int count = 0;
+
+    if (sqlite3_open(CINEBD, &db) != SQLITE_OK) {
+        printf("Error al abrir la base de datos: %s\n", sqlite3_errmsg(db));
+        return 0;
+    }
+
+    const char *countQuery = "SELECT COUNT(*) FROM INVENTARIO";
+    if (sqlite3_prepare_v2(db, countQuery, -1, &stmt, NULL) != SQLITE_OK) {
+        printf("Error al preparar la declaración COUNT: %s\n", sqlite3_errmsg(db));
+        sqlite3_close(db);
+        return 0;
+    }
+
+    if (sqlite3_step(stmt) == SQLITE_ROW) {
+        count = sqlite3_column_int(stmt, 0);
+    }
+
+    sqlite3_finalize(stmt);
+    sqlite3_close(db);
+
+    return count;
+}
+
 int insert_tarjeta(Tarjeta t){
     sqlite3 *db;
     sqlite3_stmt *stmt;
@@ -717,6 +793,33 @@ int insert_tarjeta(Tarjeta t){
     }
     sqlite3_finalize(stmt);
 }
+
+int count_tarjetas() {
+    sqlite3 *db;
+    sqlite3_stmt *stmt;
+    int count = 0;
+
+    if (sqlite3_open(CINEBD, &db) != SQLITE_OK) {
+        printf("Error al abrir la base de datos: %s\n", sqlite3_errmsg(db));
+        return 0;
+    }
+
+    const char *countQuery = "SELECT COUNT(*) FROM TARJETA";
+    if (sqlite3_prepare_v2(db, countQuery, -1, &stmt, NULL) != SQLITE_OK) {
+        printf("Error al preparar la declaración COUNT: %s\n", sqlite3_errmsg(db));
+        sqlite3_close(db);
+        return 0;
+    }
+
+    if (sqlite3_step(stmt) == SQLITE_ROW) {
+        count = sqlite3_column_int(stmt, 0);
+    }
+
+    sqlite3_finalize(stmt);
+    sqlite3_close(db);
+    return count;
+}
+
 // enseñar tarjetas
 Tarjeta* show_tarjeta() {
     sqlite3 *db;
@@ -743,7 +846,7 @@ Tarjeta* show_tarjeta() {
     }
 
     int r = 0;
-    printf("===================================\n");
+    //printf("===================================\n");
     while (sqlite3_step(stmt) == SQLITE_ROW) {
         // Asignar memoria dinámica para cada campo
         const unsigned char *numero = sqlite3_column_text(stmt, 0);
@@ -837,7 +940,7 @@ int update_saldo(Tarjeta t, double saldo){
         printf("Error al actualizar el saldo\n");
         return 1;
     } else {
-        printf("Saldo actualizado correctamente\n");
+        //printf("Saldo actualizado correctamente\n");
         return 0;
     }
 }
