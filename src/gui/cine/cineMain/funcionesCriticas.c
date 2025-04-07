@@ -24,6 +24,7 @@ void ensenar_criticas() {
         peliculaElegida[strcspn(peliculaElegida, "\n")] = '\0'; // Eliminar el carácter de nueva línea
         Critica *critica = show_critica();
         Critica *criticas = critica_by_pelicula(critica, peliculaElegida);
+        
         if (criticas == NULL) {
             printf("No hay criticas para esta pelicula\n");
             return;

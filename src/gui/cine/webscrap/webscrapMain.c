@@ -3,7 +3,9 @@
 #include <string.h>
 #include "webscrapMain.h"
 #include "../../../BBDD/cineDB.h" // Aquí se asume que insertarPelicula está definida
-int ccsave;
+int ccsave = 0;
+int ccsaveAPI = 0; 
+
 void pyAlhondiga(void)
 {
     printf("Ejecutando el script de Python...\n");
@@ -83,6 +85,23 @@ void pyAlhondiga(void)
     // Liberar el array dinámico
     free(peliculas);
 }
+void consultorAPI(void)
+{
+    printf("Ejecutando el script de Python...\n");
+    FILE *fp;
+    char path[1035];
+    fp = popen("python src/gui/cine/webscrap/movies.py upstream", "r");
+    if (fp == NULL) {
+        printf("Failed to run command\n");
+        return;
+    }
+    while (fgets(path, sizeof(path), fp) != NULL) {
+        printf("%s", path);
+    }
+    pclose(fp);
+}
+
+
 /*
 int main(void)
 {
