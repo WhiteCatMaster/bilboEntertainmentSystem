@@ -59,34 +59,47 @@ void guardarBD(Guateque g){
     
 }
 
+void menuConsulta(Guateque* g){
+    int id_guateque;
+    imprimirGuateques(g);
+    scanf("%d", &id_guateque);
+    if (id_guateque!=0){
+    imprimirEventos(g[id_guateque-1]); //Restamos 1 para adecuarlo al índice
+    }
+}
+
 
 int main(void){
     Guateque* guateque;
     int opcion = 1;
     while(opcion != 0){
+        opcion=1;
         guateque = get_guateques();
-        printf("Bienvenido al gestor de guateques, elige que quieres hacer:\n");
+        printf("\n**********************************************************\n");
+        printf("Bienvenido al gestor de guateques, elige qué quieres hacer:\n");
         printf("    0) Salir\n");
         printf("    1) Consultar guateques y/o eventos\n");
         printf("    2) Resgistrar un nuevo guateque\n");
         printf("    3) Registrar un nuevo evento\n");
+        printf("**********************************************************\n");
         scanf("%d", &opcion);
         switch (opcion){
             case 0:
                 break;
             case 1:
-                imprimirGuateques(guateque);
-                scanf("%d", &opcion);
-                imprimirEventos(guateque[opcion-1]);
+                menuConsulta(guateque);
+                
                 break;
             case 2:
                 Guateque nuevoguateque;
                 printf("Introduce el nombre del guateque:\n");
                 nuevoguateque.nombre = malloc(sizeof(char)*100);
                 scanf("%s", nuevoguateque.nombre);
-                printf("Introduce la direccion:\n");
+                
+                printf("Introduce la dirección:\n");
                 nuevoguateque.direccion = malloc(sizeof(char)*100);
                 scanf("%s", nuevoguateque.direccion);
+                
                 nuevoguateque.id = contar_guateques();
                 insertar_guateque(nuevoguateque);
                 printf("Se ha guardado el guateque:\n");
@@ -103,11 +116,11 @@ int main(void){
                 scanf("%s", evento.fecha);
                 printf("Introduce el precio del evento:\n");
                 scanf("%f", &evento.precio);
-                printf("Introduce una breve descripcion:\n");
+                printf("Introduce una breve descripción:\n");
                 evento.descripcion = malloc(sizeof(char)*100);
                 scanf("%s", evento.descripcion);
                 evento.id = contar_eventos();
-                printf("En cual de estos guateques va a tener lugar?\n");
+                printf("En cuál de estos guateques va a tener lugar?\n");
                 imprimirGuateques(guateque);
                 int id;
                 scanf("%d", &id);
@@ -123,7 +136,7 @@ int main(void){
                 printf("En que guateque esta el evento que quieres eliminar?\n");
                 imprimirGuateques(guateque);
                 scanf("%d", &opcion);
-                printf("Que evento quieres eliminar?\n");
+                printf("Qué evento quieres eliminar?\n");
                 scanf("%d", &opcion);
                 imprimirEventos(guateque[opcion-1]);
                 eliminar_evento(guateque[opcion-1].eventos[opcion-1]);
@@ -131,6 +144,7 @@ int main(void){
                 break;
             default:
                 printf("No es una opcion valida\n");
+                break;
         }
     }
     

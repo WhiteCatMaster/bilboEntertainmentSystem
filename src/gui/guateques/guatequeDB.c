@@ -91,7 +91,7 @@ int contar_guateques(){
     // Finalizar y cerrar la base de datos
     sqlite3_finalize(stmt);
     sqlite3_close(db);
-
+    //printf("guatequeDB:contar_guateques.INFO: %d\n",nguateques);
     return nguateques;
 }
 
@@ -133,12 +133,17 @@ int contar_eventos_por_guateque(int id){
     }
 
     char *select = "SELECT * FROM EVENTO WHERE ID_G=?;";
+
+    //char *select = "SELECT COUNT (ID_E) FROM EVENTO WHERE ID_G=?;";
     if (sqlite3_prepare_v2(db, select, -1, &stmt, NULL) != SQLITE_OK) {
         printf("Error al preparar la declaración SQL: %s\n", sqlite3_errmsg(db));
         sqlite3_close(db);
         return 0;
     }
     sqlite3_bind_int(stmt,1, id);
+    //sqlite3_bind_int(stmt,1, id);
+
+    //neventos=sqlite3_step(stmt);
 
     while (sqlite3_step(stmt) != SQLITE_DONE) { neventos++; }
     
@@ -164,7 +169,12 @@ Evento* get_eventos(){
         return NULL;
     }
 
+  
+
     int neventos = contar_eventos();
+
+    //printf("guatequeDB:get_eventos:INFO neventos = %d\n",neventos);
+
     Evento *eventos = malloc(neventos * sizeof(Evento));
     if (eventos == NULL) {
         printf("Error al asignar memoria\n");
@@ -181,17 +191,28 @@ Evento* get_eventos(){
         eventos[i].nombre = malloc(strlen(nombre)+1);
         strcpy(eventos[i].nombre, nombre);
 
+        //printf("guatequeDB:get_eventos:INFO eventos[%d].nombre = %s\n",i,eventos[i].nombre);
+
         eventos[i].precio = sqlite3_column_double(stmt, 2);
+
+        //printf("guatequeDB:get_eventos:INFO eventos[%d].precio = %f\n",i,eventos[i].precio);
 
         char* fecha = (char *) sqlite3_column_text(stmt, 3);
         eventos[i].fecha = malloc(strlen(fecha)+1);
         strcpy(eventos[i].fecha, fecha);
 
+        //printf("guatequeDB:get_eventos:INFO eventos[%d].fecha = %s\n",i,eventos[i].fecha);
+
         char* descripcion = (char *) sqlite3_column_text(stmt, 4);
         eventos[i].descripcion = malloc(strlen(descripcion)+1);
         strcpy(eventos[i].descripcion, descripcion);
+
+        //printf("guatequeDB:get_eventos:INFO eventos[%d].descripcion = %s\n",i,eventos[i].descripcion);
         
         eventos[i].idg = sqlite3_column_int(stmt, 5);
+
+        //printf("guatequeDB:get_eventos:INFO eventos[%d].idg = %d\n",i,eventos[i].idg);
+
     }
     
     // Finalizar y cerrar la base de datos
@@ -204,18 +225,20 @@ Evento* get_eventos(){
 Guateque* get_guateques() {
     sqlite3 *db;
     sqlite3_stmt *stmt;
+
+// Abrimos DB    
     if (sqlite3_open(GUATEQUEDB, &db) != SQLITE_OK) {
         printf("Error al abrir la base de datos: %s\n", sqlite3_errmsg(db));
         return NULL;
     }
-
+// Recolectamos todos los Guateques
     char *select = "SELECT * FROM GUATEQUE";
     if (sqlite3_prepare_v2(db, select, -1, &stmt, NULL) != SQLITE_OK) {
         printf("Error al preparar la declaración SQL: %s\n", sqlite3_errmsg(db));
         sqlite3_close(db);
         return NULL;
     }
-
+// Reservamos memoria para los Guateques
     int nguateques = contar_guateques();
     Guateque *guateques = malloc(nguateques * sizeof(Guateque));
     if (guateques == NULL) {
@@ -224,33 +247,44 @@ Guateque* get_guateques() {
         sqlite3_close(db);
         return NULL;
     }
-
+// Recorremos el array hasta el número de Guateques o que haya error
     for (int i = 0; i < nguateques && sqlite3_step(stmt) == SQLITE_ROW; i++)
     {
         int ultevento = 0;
         int id = sqlite3_column_int(stmt, 0);
         guateques[i].id = id; 
-        int neventos = contar_eventos_por_guateque(id);
+        //Comprobamos el número de eventos
+        //int neventos = contar_eventos_por_guateque(id);
+        int neventos = contar_eventos();
+
+        
 
         char* nombre = (char *) sqlite3_column_text(stmt, 1);
         guateques[i].nombre = malloc(strlen(nombre)+1);
         strcpy(guateques[i].nombre, nombre);
 
+        //printf("guatequeDB:get_guateques:INFO nombre(%d) = %s\n",i,nombre);
+
         char* direccion = (char *) sqlite3_column_text(stmt, 2);
         guateques[i].direccion = malloc(strlen(direccion)+1);
         strcpy(guateques[i].direccion, direccion);
+
+        //printf("guatequeDB:get_guateques:INFO direccion(%d) = %s\n",i,direccion);
         
         guateques[i].eventos = malloc(neventos*sizeof(Evento));
-        Evento* eventos = get_eventos();
+        
+        Evento* eventos = get_eventos(guateques[i].id); // Obtenemos todos los eventos
+        
         for (int j = 0; j < neventos; j++)
         {
             if(eventos[j].idg == guateques[i].id){
                 guateques[i].eventos[ultevento] = eventos[j];
+                //printf("guatequeDB:get_guateques:INFO Asignamos a guateque(%d) en el índice (%d) el evento con id (%d)\n",i,ultevento,j);
                 ultevento++;
             }
         }
-        guateques[i].neventos = neventos;
-
+        guateques[i].neventos = ultevento;
+        //printf("guatequeDB:get_guateques:INFO neventos(%d) = %d\n",i,guateques[i].neventos);
     }
 
     // Finalizar y cerrar la base de datos
