@@ -48,11 +48,16 @@ int main() {
         if(c == '0'){
           	clear_screen();
             comprarEntradas();
+
+        }+
+        else {
+
         }else if (c == '1'){
             clear_screen();
             ensenar_criticas();
 
         }else {
+
 
             clear_screen();
         }
