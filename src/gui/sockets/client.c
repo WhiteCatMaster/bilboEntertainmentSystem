@@ -38,18 +38,10 @@ int enviarMensaje(char c){
 
      // Enviamos un mensaje al servidor
     send(sock, c, sizeof(c), 0);
-    printf("Mensaje enviado: %s\n", argv[1]);
 
     // Leemos la respuesta del servidor
     read(sock, buffer, MAX_BUFFER);
-    printf("Respuesta del servidor: %s\n", buffer);
-    if(buffer == '0'){
-        printf("Comando ejecutado correctamente");
-        return 0;
-    }else{
-        printf("Error en el envio y/o ejecucion del comando");
-        return -1;
-    }
+    return buffer-'0'; //6 incorrecto, del 1 al 5 correcto cada uno con su funcion respectiva
 
     close(sock);
 

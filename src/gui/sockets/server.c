@@ -47,35 +47,38 @@ int main() {
         }
         // Leemos el mensaje del socket
         read(new_socket, buffer, MAX_BUFFER);
-        char response = '0';
+        char response = '6';
         switch (buffer) {
             case '1':
                 //void borrarbdLibro();
                 //Comunicarse con la funcion que esta en cineDB.c, si se borra correctamente devuelve un 0, si llega un 0
                 //poner algun mensaje de tarjeta borrada correctamente.
+                response = '1';
                 break;
             case '2':
                 //borrarbdTarjeta();
+                response = '2';
                 break;
             case '3':
                 //borrarbdInventario();
+                response = '3';
                 break;
             case '4':
                 //borrarbdPelicula();
+                response = '4';
                 break;
             case '5':
                 //borrarbdCritica();
+                response = '5';
                 break;
             default:
                 printf("\nOpcion invalida. Intente de nuevo.\n");
                 break;
-                response = '1';
         }
 
         // Enviarmos respuesta al cliente
         send(new_socket, response, strlen(response), 0);
         
-        printf("Mensaje enviado al cliente\n");
 
         // Limpiamos el buffer
         memset(buffer, 0, MAX_BUFFER);
