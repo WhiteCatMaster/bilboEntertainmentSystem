@@ -1,3 +1,3 @@
-C:/Users/inigo.peleteiro/OneDrive - Universidad de Deusto/Escritorio/cReal/softwareCine/cmake-build-debug/CMakeFiles/software.dir
-C:/Users/inigo.peleteiro/OneDrive - Universidad de Deusto/Escritorio/cReal/softwareCine/cmake-build-debug/CMakeFiles/edit_cache.dir
-C:/Users/inigo.peleteiro/OneDrive - Universidad de Deusto/Escritorio/cReal/softwareCine/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/home/pele/projects/bilboEntertainmentSystem/cmake-build-debug/CMakeFiles/software.dir
+/home/pele/projects/bilboEntertainmentSystem/cmake-build-debug/CMakeFiles/edit_cache.dir
+/home/pele/projects/bilboEntertainmentSystem/cmake-build-debug/CMakeFiles/rebuild_cache.dir

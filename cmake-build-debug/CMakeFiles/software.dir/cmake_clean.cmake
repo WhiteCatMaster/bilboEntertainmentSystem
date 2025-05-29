@@ -1,11 +1,10 @@
 file(REMOVE_RECURSE
-  "CMakeFiles/software.dir/src/gui/cine/cineMain/funcionesCine.c.obj"
-  "CMakeFiles/software.dir/src/gui/cine/cineMain/funcionesCine.c.obj.d"
-  "CMakeFiles/software.dir/src/gui/cine/cineMain/main.c.obj"
-  "CMakeFiles/software.dir/src/gui/cine/cineMain/main.c.obj.d"
-  "libsoftware.dll.a"
-  "software.exe"
-  "software.exe.manifest"
+  "CMakeFiles/software.dir/link.d"
+  "CMakeFiles/software.dir/src/gui/cine/cineMain/funcionesCine.c.o"
+  "CMakeFiles/software.dir/src/gui/cine/cineMain/funcionesCine.c.o.d"
+  "CMakeFiles/software.dir/src/gui/cine/cineMain/main.c.o"
+  "CMakeFiles/software.dir/src/gui/cine/cineMain/main.c.o.d"
+  "software"
   "software.pdb"
 )
 

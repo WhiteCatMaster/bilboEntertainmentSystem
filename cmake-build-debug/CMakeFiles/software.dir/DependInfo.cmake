@@ -8,8 +8,9 @@ set(CMAKE_DEPENDS_LANGUAGES
 
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
-  "C:/Users/inigo.peleteiro/OneDrive - Universidad de Deusto/Escritorio/cReal/softwareCine/src/gui/cine/cineMain/funcionesCine.c" "CMakeFiles/software.dir/src/gui/cine/cineMain/funcionesCine.c.obj" "gcc" "CMakeFiles/software.dir/src/gui/cine/cineMain/funcionesCine.c.obj.d"
-  "C:/Users/inigo.peleteiro/OneDrive - Universidad de Deusto/Escritorio/cReal/softwareCine/src/gui/cine/cineMain/main.c" "CMakeFiles/software.dir/src/gui/cine/cineMain/main.c.obj" "gcc" "CMakeFiles/software.dir/src/gui/cine/cineMain/main.c.obj.d"
+  "/home/pele/projects/bilboEntertainmentSystem/src/gui/cine/cineMain/funcionesCine.c" "CMakeFiles/software.dir/src/gui/cine/cineMain/funcionesCine.c.o" "gcc" "CMakeFiles/software.dir/src/gui/cine/cineMain/funcionesCine.c.o.d"
+  "/home/pele/projects/bilboEntertainmentSystem/src/gui/cine/cineMain/main.c" "CMakeFiles/software.dir/src/gui/cine/cineMain/main.c.o" "gcc" "CMakeFiles/software.dir/src/gui/cine/cineMain/main.c.o.d"
+  "" "software" "gcc" "CMakeFiles/software.dir/link.d"
   )
 
 # Targets to which this target links which contain Fortran sources.

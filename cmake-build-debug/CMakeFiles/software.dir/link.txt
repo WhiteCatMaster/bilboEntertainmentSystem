@@ -1,3 +1,1 @@
-"C:\Program Files\JetBrains\CLion 2024.3.2\bin\cmake\win\x64\bin\cmake.exe" -E rm -f CMakeFiles\software.dir/objects.a
-C:\MinGW\bin\ar.exe qc CMakeFiles\software.dir/objects.a @CMakeFiles\software.dir\objects1.rsp
-C:\MinGW\bin\mingw32-gcc.exe -g -Wl,--whole-archive CMakeFiles\software.dir/objects.a -Wl,--no-whole-archive -o software.exe -Wl,--out-implib,libsoftware.dll.a -Wl,--major-image-version,0,--minor-image-version,0 @CMakeFiles\software.dir\linkLibs.rsp
+/usr/bin/cc -g -Wl,--dependency-file=CMakeFiles/software.dir/link.d CMakeFiles/software.dir/src/gui/cine/cineMain/funcionesCine.c.o CMakeFiles/software.dir/src/gui/cine/cineMain/main.c.o -o software
