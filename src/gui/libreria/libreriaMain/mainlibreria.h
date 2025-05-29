@@ -7,6 +7,6 @@
 #include "libreria.h"
 #include <time.h>
 
-void mainlibreria();
+int mainlibreria();
 
 #endif
