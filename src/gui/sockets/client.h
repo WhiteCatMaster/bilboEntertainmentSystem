@@ -1,0 +1,1 @@
+int enviarMensaje(char c);

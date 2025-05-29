@@ -4,20 +4,16 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <unistd.h>
+#include "client.h"
 
 #define PORT 5000
 #define MAX_BUFFER 1024
 
-int main(int argc, char *argv[]) {
-    if (argc < 2) {
-        printf("Error. El programa no tiene argumentos.\n");
-        return -1;
-    }
+int enviarMensaje(char c){
 
     int sock = 0;
     struct sockaddr_in serv_addr;
     char buffer[MAX_BUFFER] = {0};
-    const char* message = "Hola desde el cliente!";
 
     // Crear socket de archivo descriptor
     if ((sock = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
@@ -40,16 +36,22 @@ int main(int argc, char *argv[]) {
         return -1;
     }
 
-    // Enviamos un mensaje al servidor
-    send(sock, argv[1], strlen(argv[1]), 0);
+     // Enviamos un mensaje al servidor
+    send(sock, c, sizeof(c), 0);
     printf("Mensaje enviado: %s\n", argv[1]);
 
     // Leemos la respuesta del servidor
     read(sock, buffer, MAX_BUFFER);
     printf("Respuesta del servidor: %s\n", buffer);
+    if(buffer == '0'){
+        printf("Comando ejecutado correctamente");
+        return 0;
+    }else{
+        printf("Error en el envio y/o ejecucion del comando");
+        return -1;
+    }
 
-    // Cerramos la conexión
     close(sock);
 
-    return 0;
+    
 }

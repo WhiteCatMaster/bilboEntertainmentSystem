@@ -12,7 +12,6 @@ int main() {
     struct sockaddr_in address;
     int addrlen = sizeof(address);
     char buffer[MAX_BUFFER] = {0};
-    const char* response = "Mensaje recibido";
 
     if ((server_fd = socket(AF_INET, SOCK_STREAM, 0)) == 0) {
         perror("Fallo en socket");
@@ -38,8 +37,8 @@ int main() {
     printf("Escuchando en el puerto %d...\n", PORT);
 
     buffer[0] = '\0';
-    // Si el mensaje no es adios seguimos escuchando
-    while (strcmp(buffer, "adios") != 0) {
+    // Si el mensaje no es S seguimos escuchando
+    while (strcmp(buffer, 'S') != 0) {
 
         // Aceptamos conexión entrante
         if ((new_socket = accept(server_fd, (struct sockaddr *)&address, (socklen_t*)&addrlen)) < 0) {
@@ -48,10 +47,38 @@ int main() {
         }
         // Leemos el mensaje del socket
         read(new_socket, buffer, MAX_BUFFER);
-        printf("Mensaje del cliente: %s\n", buffer);
+        char response = '0';
+        switch (buffer) {
+            case '1':
+                //void borrarbdLibro();
+                //Comunicarse con la funcion que esta en cineDB.c, si se borra correctamente devuelve un 0, si llega un 0
+                //poner algun mensaje de tarjeta borrada correctamente.
+                break;
+            case '2':
+                //borrarbdTarjeta();
+                break;
+            case '3':
+                //borrarbdInventario();
+                break;
+            case '4':
+                //borrarbdPelicula();
+                break;
+            case '5':
+                //borrarbdCritica();
+                break;
+            case 'S':
+            case 's':
+                printf("Saliendo del programa");
+                return 0;
+            default:
+                printf("\nOpcion invalida. Intente de nuevo.\n");
+                break;
+                response = '1';
+        }
 
         // Enviarmos respuesta al cliente
         send(new_socket, response, strlen(response), 0);
+        
         printf("Mensaje enviado al cliente\n");
 
         // Limpiamos el buffer
