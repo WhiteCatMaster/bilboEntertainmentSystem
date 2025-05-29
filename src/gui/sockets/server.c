@@ -66,10 +66,6 @@ int main() {
             case '5':
                 //borrarbdCritica();
                 break;
-            case 'S':
-            case 's':
-                printf("Saliendo del programa");
-                return 0;
             default:
                 printf("\nOpcion invalida. Intente de nuevo.\n");
                 break;
