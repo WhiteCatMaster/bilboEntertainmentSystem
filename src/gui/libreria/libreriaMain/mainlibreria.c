@@ -2,7 +2,7 @@
 
 char opcion;
 
-void mainlibreria() {
+int mainlibreria() {
     int tarjetasSiNo = 0;
 
     Tarjeta t1; t1.CVV = 123; strcpy(t1.numero, "1234 5678 9876 5432"); t1.saldo = 1000.50;
