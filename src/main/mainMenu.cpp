@@ -1,7 +1,10 @@
 #include "../gui/suicidios/main.h"
 
 int main()
-{
+{   
+    int  eleccion;
+    while (eleccion != 5)
+    {
     char eleccion;
     string password;
     cout<< R"(
@@ -10,6 +13,7 @@ int main()
     2) Libreria
     3) Cabina de suicidios
     4) GestionAdministrador
+    5) Salir
     eleccion: )";
     cin>> eleccion;
     switch (eleccion)
@@ -33,4 +37,5 @@ int main()
         main();
     }
     return 0;
+    }
 }
