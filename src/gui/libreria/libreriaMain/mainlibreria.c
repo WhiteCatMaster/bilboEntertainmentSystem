@@ -1,13 +1,8 @@
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
-#include "../../../BBDD/cineDB.h"
-#include "libreria.h"
-#include <time.h>
+#include "mainlibreria.h";
 
 char opcion;
 
-int main(int argc, char const *argv[]) {
+void mainlibreria() {
     int tarjetasSiNo = 0;
 
     Tarjeta t1; t1.CVV = 123; strcpy(t1.numero, "1234 5678 9876 5432"); t1.saldo = 1000.50;
@@ -26,7 +21,7 @@ int main(int argc, char const *argv[]) {
         tarjetasSiNo = 0;
 
         while (getchar() != '\n');
-        printf("¡BIENVENIDO A LA LIBRERIA!\n");
+        printf("BIENVENIDO A LA LIBRERIA!\n");
         printf("-----------------------------\n");
         printf("I [Inventario]\n");
         printf("L [Libros]\n");
