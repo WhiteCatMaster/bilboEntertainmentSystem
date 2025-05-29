@@ -1,4 +1,5 @@
 #include "mainlibreria.h"
+#include "../../../BBDD/cineDB.h"
 
 char opcion;
 

@@ -1,14 +1,5 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include "funcionesCine.h"
-#include "funcionesCriticas.h"
-#include "leerTextoGigante.h"
+#include "main.h"
 #include "../../../BBDD/cineDB.h"
-#include "../webscrap/webscrapMain.h"
-
 
 void ejecutar_programa(const char *comando) {
     // Usamos popen para ejecutar el comando y obtener su salida estándar
@@ -30,7 +21,7 @@ void ejecutar_programa(const char *comando) {
     fclose(fp);
 }
 
-int main() {
+int mainCine() {
     pyAlhondiga();
     borrarbdLibro();
   	// system("cd ..\\mano");

@@ -5,7 +5,7 @@
 #include "cineDB.h"
 
 
-const char *CINEBD = "src\\BBDD\\bes.db"; // Ruta de la base de datos
+const char *CINEBD = "src/BBDD/bes.db"; // Ruta de la base de datos
 // Estructura para almacenar una película
 
 
