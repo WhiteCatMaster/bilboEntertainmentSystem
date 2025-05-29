@@ -1,4 +1,4 @@
-#include "mainlibreria.h";
+#include "mainlibreria.h"
 
 char opcion;
 
