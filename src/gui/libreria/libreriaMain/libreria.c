@@ -19,7 +19,7 @@ int mostrarLibrosDisponibles() {
 
     if (cuantosLibros == 0) {
         borrarbdLibro();
-        leer_csv("src\\gui\\libreria\\libreriaMain\\LibrosBien.csv");
+        leer_csv("src/gui/libreria/libreriaMain/LibrosBien.csv");
         cuantosLibros = count_libros();
     }
 

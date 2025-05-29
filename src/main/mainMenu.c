@@ -20,6 +20,6 @@ int selector(int n)
 
 int main()
 {
-    int seleccion = 1; // aqui va cambiando el valor 
+    int seleccion = 2; // aqui va cambiando el valor 
     selector(seleccion);
 }
