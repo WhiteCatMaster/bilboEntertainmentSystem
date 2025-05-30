@@ -1,5 +1,9 @@
 #include "Usuario.h"
 #include "KillSesion.h"
+#include <algorithm> 
+#include <cctype>    
+#include <sstream>  
+#include <limits>
 #include <ctime>
 
 Usuario logIn();
