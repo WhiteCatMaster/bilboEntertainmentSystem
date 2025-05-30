@@ -1,1 +1,1 @@
-int enviarMensaje(char c);
+void enviarMensaje(char c);

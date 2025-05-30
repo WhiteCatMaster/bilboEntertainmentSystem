@@ -1,10 +1,14 @@
 #include "../gui/suicidios/main.h"
+#include "../gui/libreria/libreriaMain/mainlibreria.h"
+#include "../gui/cine/cineMain/main.h"
 #include <iostream>
 #include <limits>
+#include "../../src/gui/sockets/client.h"
 using namespace std;
 
 int main()
 {
+    
     string input;
     char eleccion;
     string password;
@@ -36,10 +40,12 @@ int main()
     {
         case '1':
             cout << "Cine seleccionado\n";
+            mainCine();
             break;
-
+    
         case '2':
             cout << "Libreria seleccionada\n";
+            mainlibreria();
             break;
 
         case '3':
