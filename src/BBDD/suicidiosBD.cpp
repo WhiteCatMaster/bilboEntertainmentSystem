@@ -1,6 +1,6 @@
 #include "sqlite3.h"
 #include "suicidiosBD.h"
-#include "src/gui/suicidios/KillSesion.h"
+#include "../gui/suicidios/KillSesion.h"
 
 
 const char *CINEBD = "src/BBDD/bes.db";
@@ -68,9 +68,17 @@ Usuario* show_usuarios()
     int r=0;
     while (sqlite3_step(stmt) == SQLITE_ROW) 
     {
-        
-        *usuarios[r]->getId() = sqlite3_column_int(stmt, 1);
-
+        int id = sqlite3_column_int(stmt, 0);
+        usuarios[r].setId(id);
+        string nombre = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 1));
+        usuarios[r].setNombre(nombre);
+        int edad = sqlite3_column_int(stmt, 2);
+        usuarios[r].setEdad(edad);
+        string tipoMuerte = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 3));
 
     }
+    sqlite3_finalize(stmt);
+    sqlite3_close(db);
+
+    return usuarios;
 }
