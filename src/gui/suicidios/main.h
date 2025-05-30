@@ -1,5 +1,6 @@
 #include "Usuario.h"
 #include "KillSesion.h"
+#include "../../BBDD/suicidiosBD.h"
 #include <algorithm> 
 #include <cctype>    
 #include <sstream>  

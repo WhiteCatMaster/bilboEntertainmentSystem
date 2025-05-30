@@ -15,6 +15,9 @@ void mostrarMenu() {
     cout << "3) Borrar base de datos de Inventario" << endl;
     cout << "4) Borrar base de datos de Pelicula" << endl;
     cout << "5) Borrar base de datos de Critica" << endl;
+    cout << "6) Borrar base de datos de Suicidios" << endl;
+    cout << "7) Ver usuarios eliminados" << endl;
+    cout << "--------------------------------" << endl;
     cout << "S) Salir" << endl;
     cout << "Ingrese su opcion: ";
 }
@@ -30,7 +33,31 @@ int mainadmin() {
             cout << "Saliendo del programa...\n" << endl;
             return 0;
         }
-
+        if(entrada == "6")
+        {
+            cout << "Borrando base de datos de suicidios..." << endl;
+            if (borrardbMuerte() == 0) {
+                cout << "Base de datos de suicidios borrada correctamente." << endl;
+            } else {
+                cout << "Error al borrar la base de datos de suicidios." << endl;
+            }
+            continue;
+        }
+        if (entrada == "7") {
+            Usuario* usuarios = show_usuarios();
+            if (usuarios != NULL) {
+                cout << "Usuarios eliminados:" << endl;
+                for (int i = 0; usuarios[i].getId() != 0; i++) {
+                    cout << "ID: " << usuarios[i].getId() 
+                         << ", Nombre: " << usuarios[i].getNombre() 
+                         << ", Edad: " << usuarios[i].getEdad() << endl;
+                }
+                delete[] usuarios;
+            } else {
+                cout << "No se pudieron recuperar los usuarios eliminados." << endl;
+            }
+            continue;
+        }
         try {
             int opcion = stoi(entrada);
 

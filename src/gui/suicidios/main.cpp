@@ -108,7 +108,7 @@ int mainSuicidios()
     Usuario usuario = logIn();
     KillSesion sesion = menuSeleccionTipoMuerte(usuario);
     imprimirRecibo(sesion, usuario);
-
+    insert_muerte(&sesion, &usuario);
     
     return 0;
 }
