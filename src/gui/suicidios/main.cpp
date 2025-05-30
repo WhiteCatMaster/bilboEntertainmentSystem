@@ -31,7 +31,7 @@ Usuario logIn()
         ԅ(≖‿≖ԅ)
     Nombre: )";
     
-    cin >> nombre;
+    getline(cin, nombre);
 
     do {
         cout << R"(
@@ -42,6 +42,7 @@ Usuario logIn()
     } while (!all_of(edadStr.begin(), edadStr.end(), ::isdigit));
 
     edad = stoi(edadStr);
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
 
     return Usuario(nombre, edad);
 }

@@ -1,5 +1,6 @@
 #include "main.h"
 #include "../../../BBDD/cineDB.h"
+#include "../../../main/mainMenu.h"
 
 void ejecutar_programa(const char *comando) {
     // Usamos popen para ejecutar el comando y obtener su salida estándar
@@ -32,9 +33,12 @@ int mainCine() {
     while (c != '0'){
         leerTcine();
         consultorAPI();
+        printf("\n");
+        printf("BIENVENIDO AL CINE!\n");
         printf("===================================\n ");
-        printf("(0)-- > comprar entradas < --\n ");
-        printf("(1)-- > añadir critica < --\n ");
+        printf("0) Comprar entradas\n");
+        printf("1) Añadir critican\n");
+        printf("2) Salir\n");
         c = getchar();
         if(c == '0'){
           	clear_screen();
@@ -42,6 +46,10 @@ int mainCine() {
         }else if (c == '1'){
             clear_screen();
             ensenar_criticas();
+        }else if (c == '2'){
+            printf("Saliendo del cine...\n");
+            printf("\n");
+            selector();
 
         }else {
 

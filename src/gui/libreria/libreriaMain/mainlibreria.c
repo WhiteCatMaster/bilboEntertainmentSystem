@@ -1,5 +1,6 @@
 #include "mainlibreria.h"
 #include "../../../BBDD/cineDB.h"
+#include "../../../main/mainMenu.h"
 
 char opcion;
 
@@ -26,7 +27,6 @@ int mainlibreria() {
         printf("-----------------------------\n");
         printf("I [Inventario]\n");
         printf("L [Libros]\n");
-        printf("F [Vaciar BD]\n");
         printf("S [Salir]\n");
 
         scanf(" %c", &opcion);
@@ -35,18 +35,17 @@ int mainlibreria() {
             if (numeroLibro != -1) {
                 pagarTarjetas(numeroLibro, 3);
             }
-        } else if (opcion == 'F') {
-            borrarbdLibro();
-            borrarbdTarjeta();
-            borrarbdInventario();
-            tarjetasSiNo = 1;
         } else if (opcion == 'I') {
             mostrarInventario();
         } else if (opcion == 'S') {
-            break;
+            printf("\n");
+            printf("Saliendo de la libreria...\n");
+            printf("\n");
+            selector();
         } else {
             printf("-----------------------------\n");
             printf("Selecciona un caracter valido!\n");
+            printf("\n");
         }
     }
 

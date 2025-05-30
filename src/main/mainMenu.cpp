@@ -4,6 +4,7 @@
 #include <iostream>
 #include <limits>
 #include "../../src/gui/sockets/client.h"
+#include "Admin.h"
 using namespace std;
 
 int main()
@@ -14,16 +15,13 @@ int main()
     string password;
 
     while (true)
-    {
-        
+    {    
         cout << R"(
-    Elige que actividad en BES deseas hacer
-    1) Cine 
-    2) Libreria
-    3) Cabina de suicidios
-    4) GestionAdministrador
-    5) Salir
-    Eleccion: )";
+Elige que actividad de BES deseas hacer
+1) Cabina de suicidios
+2) GestionAdministrador
+3) Salir
+Eleccion: )";
 
     getline(cin, input); 
 
@@ -39,35 +37,31 @@ int main()
     switch (eleccion)
     {
         case '1':
-            cout << "Cine seleccionado\n";
-            mainCine();
-            break;
-    
-        case '2':
-            cout << "Libreria seleccionada\n";
-            mainlibreria();
-            break;
-
-        case '3':
             mainSuicidios();
             break;
 
-        case '4':
+        case '2':
             cout << "Escriba la contraseña: ";
             cin >> password;
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
             if (password == "root")
             {
+                cout << "\n";
                 cout << "Acceso concedido al modo administrador\n";
-                // codigo admin
+                cout << "\n";
+                mainadmin();
             }
             else
             {
+                cout << "\n";
                 cout << "Contraseña incorrecta\n";
             }
             break;
 
-        case '5':
-            cout << "Saliendo...\n";
+        case '3':
+            cout << "\n";
+            cout << "Saliendo del programa...\n";
             return 0;
         }
     }

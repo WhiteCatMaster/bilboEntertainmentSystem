@@ -171,7 +171,7 @@ int borrarbdPelicula(){
         printf("Error al borrar la tabla\n");
         return 1;
     } else {
-        printf("Tabla borrada correctamente\n");
+        printf("Peliculas borradas correctamente\n");
         return 0;
     }
 }
@@ -301,7 +301,7 @@ int borrarbdCritica(){
         printf("Error al borrar la tabla\n");
         return 1;
     } else {
-        printf("Tabla borrada correctamente\n");
+        printf("Critica borrada correctamente\n");
         return 0;
     }
 }
@@ -471,7 +471,7 @@ int borrarbdLibro(){
         printf("Error al borrar la tabla\n");
         return 1;
     } else {
-        //printf("Tabla borrada correctamente\n");
+        printf("Libros borrados correctamente\n");
         return 0;
     }
 }
@@ -623,7 +623,7 @@ int borrarbdInventario(){
         printf("Error al borrar la tabla\n");
         return 1;
     } else {
-        printf("Tabla borrada correctamente\n");
+        printf("Inventario borrado correctamente\n");
         return 0;
     }
 }
@@ -912,7 +912,7 @@ int borrarbdTarjeta(){
         printf("Error al borrar la tabla\n");
         return 1;
     } else {
-        printf("Tabla borrada correctamente\n");
+        printf("Tarjetas borradas correctamente\n");
         return 0;
     }
 }

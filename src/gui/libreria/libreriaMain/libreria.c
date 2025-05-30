@@ -36,7 +36,7 @@ int mostrarLibrosDisponibles() {
     printf("-----------------------------\n");
 
     while (1) {
-        printf("Selecciona un libro (1-%d): ", cuantosLibros);
+        printf("Selecciona un libro: ");
         if (scanf("%d", &opcion) != 1) {
             printf("Entrada invalida. Intentalo de nuevo.\n");
             while (getchar() != '\n'); // Limpiar stdin
@@ -120,12 +120,13 @@ Libro pagarTarjetas(int numlibro, int numtarjetas) {
         printf("%d. Numero:%s CVV:%d Saldo:%f\n",i + 1, tarjetas[i].numero, tarjetas[i].CVV, tarjetas[i].saldo);
     }
     printf("-----------------------------\n");
-    printf("Selecciona una tarjeta:\n");
+    printf("Selecciona una tarjeta: ");
     scanf("%d", &seleccion);
     seleccionado = seleccion;
 
     if(seleccion < 1 || seleccion > numtarjetas) {
         printf("Por favor, selecciona una tarjeta valida...\n");
+        printf("\n");
     } else {
         while (getchar() != '\n');
         printf("-----------------------------\n");
@@ -206,7 +207,7 @@ void mostrarInventario() {
 
     if(cuantos == 0) {
         printf("No hay libros en el inventario\n");
-        printf("-----------------------------\n");
+        printf("\n");
     } else {
         int cuantosinv;
         cuantosinv = count_inventario();
@@ -235,8 +236,10 @@ void mostrarInventario() {
             scanf(" %d", &opcion2);
             if(getanoInventarioPorNombre(librosinv[opcion2-1].nombre) == 2999) {
                 printf("Selecciona un libro alquilado!\n");
+                printf("\n");
             } else {
                 printf("Devolucion completada!\n");
+                printf("\n");
                 delete_libroInventario(&librosinv[opcion2-1]);
                 insert_libro(&librosinv[opcion2-1]);
             }

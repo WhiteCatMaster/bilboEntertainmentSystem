@@ -16,6 +16,7 @@ void enviarMensaje(char c){
     char buffer[MAX_BUFFER] = {0};
 
     // Crear socket de archivo descriptor
+    //Se llama sock
     if ((sock = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
         printf("\n Fallo en la creación del socket \n");
     }
@@ -37,6 +38,7 @@ void enviarMensaje(char c){
     char mensaje[2];
     mensaje[0] = c;
     mensaje[1] = '\0';
+    //aqui le envia al server
     send(sock, mensaje, strlen(mensaje), 0);
 
     // Leemos la respuesta del servidor

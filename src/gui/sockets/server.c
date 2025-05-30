@@ -10,6 +10,7 @@
 #define MAX_BUFFER 1024
 
 int serverMain() {
+    //servidor se llama server_fd
     int server_fd, new_socket;
     struct sockaddr_in address;
     int addrlen = sizeof(address);
@@ -54,7 +55,7 @@ int serverMain() {
         char response = '0';
         switch (num) {
             case 1:
-                borrarbdPelicula();               
+                borrarbdLibro();               
                 response = '1';
                 break;
             case 2:
