@@ -3,6 +3,7 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <unistd.h>
+#include ".../src/BBDD/cineDB.h"
 
 #define PORT 5000
 #define MAX_BUFFER 1024
@@ -50,25 +51,23 @@ int main() {
         char response = '6';
         switch (buffer) {
             case '1':
-                //void borrarbdLibro();
-                //Comunicarse con la funcion que esta en cineDB.c, si se borra correctamente devuelve un 0, si llega un 0
-                //poner algun mensaje de tarjeta borrada correctamente.
+                borrarbdPelicula();               
                 response = '1';
                 break;
             case '2':
-                //borrarbdTarjeta();
+                borrarbdTarjeta();
                 response = '2';
                 break;
             case '3':
-                //borrarbdInventario();
+                borrarbdInventario();
                 response = '3';
                 break;
             case '4':
-                //borrarbdPelicula();
+                borrarbdPelicula();
                 response = '4';
                 break;
             case '5':
-                //borrarbdCritica();
+                borrarbdCritica();
                 response = '5';
                 break;
             default:
