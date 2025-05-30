@@ -13,6 +13,11 @@ Usuario::Usuario(string _nombre, int _edad) {
     edad = _edad;
     id = id + 1;
 }
+Usuario::Usuario(){
+    nombre = "";
+    edad = 1;
+    id +=1 ;
+}
 
 Usuario::~Usuario() {
     // Destructor

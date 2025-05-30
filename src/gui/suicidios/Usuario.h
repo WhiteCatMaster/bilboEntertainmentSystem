@@ -15,6 +15,7 @@ using namespace std;
 class Usuario {
 public:
     Usuario(string, int);
+    Usuario();
     ~Usuario();
 
     
